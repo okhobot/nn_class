@@ -1,0 +1,4 @@
+[submodule "opencl_wrapper"]
+	path = opencl_wrapper
+	url = https://github.com/okhobot/opencl_wrapper.git
+	branch = release

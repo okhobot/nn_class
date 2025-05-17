@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="nn_class" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Debug">
+				<Option output="bin/Debug/nn_class" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Debug/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-g" />
+					<Add directory="include" />
+					<Add directory="include/layers" />
+				</Compiler>
+			</Target>
+			<Target title="Release">
+				<Option output="bin/Release/nn_class" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Release/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-O3" />
+					<Add directory="include" />
+					<Add directory="include/layers" />
+				</Compiler>
+				<Linker>
+					<Add option="-O3" />
+					<Add option="-s" />
+					<Add option="-ld3d9" />
+					<Add directory="C:/Users/dns/Downloads/libX11-1.4.99.1-mingw32/lib" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add directory="C:/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v12.2/include" />
+			<Add directory="include" />
+			<Add directory="../opencl_wrapper/include" />
+		</Compiler>
+		<Linker>
+			<Add option="-static-libstdc++" />
+			<Add option="-static-libgcc" />
+			<Add option="-static" />
+			<Add library="C:/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v12.2/lib/x64/OpenCL.lib" />
+		</Linker>
+		<Unit filename="../opencl_wrapper/src/oclw.cpp" />
+		<Unit filename="include/Kernels_manager.hpp" />
+		<Unit filename="include/NN.hpp" />
+		<Unit filename="include/activations/Activation.hpp" />
+		<Unit filename="include/activations/LeakyReLU_activation.hpp" />
+		<Unit filename="include/activations/ReLU_activation.hpp" />
+		<Unit filename="include/activations/Sigmoid_activation.hpp" />
+		<Unit filename="include/layers/Convolutional_layer.hpp" />
+		<Unit filename="include/layers/Fully_connected_layer.hpp" />
+		<Unit filename="include/layers/Image_resize_layer.hpp" />
+		<Unit filename="include/layers/Layer.hpp" />
+		<Unit filename="include/losses/LogLoss.hpp" />
+		<Unit filename="include/losses/Loss.hpp" />
+		<Unit filename="include/losses/MAE.hpp" />
+		<Unit filename="include/neuron.h" />
+		<Unit filename="include/optimizers/Optimizer.hpp" />
+		<Unit filename="include/optimizers/SGD_optimizer.hpp" />
+		<Unit filename="kernels/activations/Activation/activation_activate_kernel.cl" />
+		<Unit filename="kernels/activations/Activation/activation_multiply_ngbad_kernel.cl" />
+		<Unit filename="kernels/activations/LeakyReLU_activation/leaky_relu_activation_activate_kernel.cl" />
+		<Unit filename="kernels/activations/LeakyReLU_activation/leaky_relu_activation_multiply_ngbad_kernel.cl" />
+		<Unit filename="kernels/activations/ReLU_activation/relu_activation_activate_kernel.cl" />
+		<Unit filename="kernels/activations/ReLU_activation/relu_activation_multiply_ngbad_kernel.cl" />
+		<Unit filename="kernels/activations/Sigmoid_activation/sigmoid_activation_activate_kernel.cl" />
+		<Unit filename="kernels/activations/Sigmoid_activation/sigmoid_activation_multiply_ngbad_kernel.cl" />
+		<Unit filename="kernels/layers/Convolutional_layer/conv_lay_calculate_gradients_with_ng_kernel.cl" />
+		<Unit filename="kernels/layers/Convolutional_layer/conv_lay_calculate_ng_with_loss_func_kernel_tmp.cl" />
+		<Unit filename="kernels/layers/Convolutional_layer/conv_lay_calculate_previous_ng_in_neurons_kernel.cl" />
+		<Unit filename="kernels/layers/Convolutional_layer/conv_lay_calculate_previous_ng_kernel.cl" />
+		<Unit filename="kernels/layers/Convolutional_layer/conv_lay_convert_to_neurons_kernel.cl" />
+		<Unit filename="kernels/layers/Convolutional_layer/conv_lay_predict_kernel.cl" />
+		<Unit filename="kernels/layers/Fully_connected_layer/fcl_lay_calculate_gradients_with_ng_kernel.cl" />
+		<Unit filename="kernels/layers/Fully_connected_layer/fcl_lay_calculate_ng_kernel.cl" />
+		<Unit filename="kernels/layers/Fully_connected_layer/fcl_lay_calculate_ng_with_loss_func_kernel_tmp.cl" />
+		<Unit filename="kernels/layers/Fully_connected_layer/fcl_lay_calculate_previous_ng_in_neurons_kernel.cl" />
+		<Unit filename="kernels/layers/Fully_connected_layer/fcl_lay_calculate_previous_ng_kernel.cl" />
+		<Unit filename="kernels/layers/Fully_connected_layer/fcl_lay_predict_kernel.cl" />
+		<Unit filename="kernels/layers/Image_resize_layer/fill_float_arr_kernel.cl" />
+		<Unit filename="kernels/layers/Image_resize_layer/fill_neurons_gradients_kernel.cl" />
+		<Unit filename="kernels/layers/Image_resize_layer/imres_lay_calculate_ng_with_loss_func_kernel_tmp.cl" />
+		<Unit filename="kernels/layers/Image_resize_layer/imres_lay_resize_in_neurons_kernel.cl" />
+		<Unit filename="kernels/layers/Image_resize_layer/imres_lay_resize_kernel.cl" />
+		<Unit filename="kernels/optimizers/Optimizer/optimizer_update_b_params_kernel.cl" />
+		<Unit filename="kernels/optimizers/Optimizer/optimizer_update_w_params_kernel.cl" />
+		<Unit filename="kernels/optimizers/SGD_optimizer/sgd_optimizer_update_b_params_kernel.cl" />
+		<Unit filename="kernels/optimizers/SGD_optimizer/sgd_optimizer_update_w_params_kernel.cl" />
+		<Unit filename="kernels/test_kernel.cl" />
+		<Unit filename="src/NN.cpp" />
+		<Unit filename="src/activations/Activation.cpp" />
+		<Unit filename="src/layers/Convolutional_layer.cpp" />
+		<Unit filename="src/layers/Fully_connected_layer.cpp" />
+		<Unit filename="src/layers/Image_resize_layer.cpp" />
+		<Unit filename="src/layers/Layer.cpp" />
+		<Unit filename="src/losses/Loss.cpp" />
+		<Unit filename="src/main.cpp" />
+		<Unit filename="src/optimizers/Optimizer.cpp" />
+		<Unit filename="src/optimizers/SGD_optimizer.cpp" />
+		<Extensions>
+			<lib_finder disable_auto="1" />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>

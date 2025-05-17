@@ -1,0 +1,120 @@
+#include <layers/Layer.hpp>
+
+
+void Layer::generate_weights(float dispersion, float center)
+{
+    float d=0;
+
+    dispersion=fromf(dispersion);
+
+    weights.resize(params_count,0);
+
+    if(dispersion<0)dispersion=-dispersion/data_size;
+
+
+    for(int i=0; i<neurons_count; i++)
+    {
+        neurons[i].params_count=data_size;
+        neurons[i].params_start_index=i*data_size;
+
+        neurons[i].b=fromf(rand()%10001/5000-1);
+
+        neurons[i].b_grad=0;
+        neurons[i].gradient=0;
+
+        d=fromf(tof(neurons[i].b)*tof(neurons[i].b)/(data_size+1));
+
+        for(int w_i=0; w_i<data_size; w_i++)
+        {
+            weights[i*data_size+w_i]=fromf(rand()%10001/5000.0-1) ;
+            d+=fromf(tof(weights[i*data_size+w_i])*tof(weights[i*data_size+w_i])/(data_size+1));
+        }
+
+        if(dispersion!=0 )
+        {
+            for(int w_i=0; w_i<data_size; w_i++)
+                weights[i*data_size+w_i]=(weights[i*data_size+w_i]*sqrt(dispersion/d)+center);
+            neurons[i].b=(neurons[i].b*sqrt(dispersion/d)+center);
+        }
+
+    }
+
+
+
+}
+
+
+
+
+void Layer::generate_kernels(Loss *loss)
+{
+    std::string new_kernel_name=km.get("calculate_ng_main_lay").substr(0,km.get("calculate_ng_main_lay").size()-4);
+    std::string new_path="kernels/generated/"+new_kernel_name;
+
+    loss->generate_cl_file_with_loss_func(km.get_path("calculate_ng_main_lay"),new_path);
+
+    km.add_kernel("calculate_ng_main_lay",new_kernel_name,"kernels/generated/");
+}
+
+
+
+
+
+void Layer::load_layer(std::ifstream &input)
+{
+    if(oclw->is_inited())
+    {
+        neurons.resize(neurons_count);
+        oclw->read_variable(neurons_key, neurons.size()*sizeof(neuron),neurons.data());
+        weights.resize(params_count);
+    }
+    try
+    {
+        for(size_t i=0; i<params_count; i++)
+            input.read(reinterpret_cast<char*>(&weights[i]),sizeof(nn_type));
+
+        for(int i=0; i<neurons_count; i++)
+            input.read(reinterpret_cast<char*>(&neurons[i].b),sizeof(nn_type));
+    }
+    catch(const char* error_message)
+    {
+        debug_utils::call_error(0,"Layer::load_layer", "error while loading weights", error_message);
+    }
+    if(oclw->is_inited())
+    {
+        oclw->write_variable(neurons_key, neurons.size()*sizeof(neuron),neurons.data());
+        oclw->write_variable(weights_key, weights.size()*sizeof(nn_type),weights.data());
+        neurons.clear();
+        weights.clear();
+    }
+}
+
+void Layer::save_layer(std::ofstream &output)
+{
+    if(oclw->is_inited())
+    {
+        weights.resize(params_count);
+        neurons.resize(neurons_count);
+        oclw->read_variable(neurons_key, neurons.size()*sizeof(neuron),neurons.data());
+        oclw->read_variable(weights_key, weights.size()*sizeof(nn_type),weights.data());
+    }
+
+    for(size_t i=0; i<params_count; i++)
+        output.write(reinterpret_cast<char*>(&weights[i]),sizeof(nn_type));
+
+    for(int i=0; i<neurons_count; i++)
+        output.write(reinterpret_cast<char*>(&neurons[i].b),sizeof(nn_type));
+
+}
+
+
+
+
+std::vector<std::string> Layer::get_kernels_paths()
+{
+    std::vector<std::string> tmp, res=km.get_kernels_paths();
+
+    if(activation)tmp=activation->get_kernels_paths();
+    res.insert(res.end(),tmp.begin(),tmp.end());
+    return res;
+}
