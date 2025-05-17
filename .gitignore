@@ -10,6 +10,8 @@ nn_class/nn_class.cscope_file_list
 
 nn_class/kernels/generated/*.cl
 
+main.cpp
+example.cpp
 naming.txt
 .cache
 .vscode
