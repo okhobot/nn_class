@@ -85,7 +85,7 @@ public:
 
     virtual std::vector<float> predict(const std::vector<float> &input, int end_layer=0);// end layer - index of output layer
 
-    virtual void train(std::vector<std::vector<float>> &input, std::vector<std::vector<float>> &output, int test_data_count=0, int epochs=50, int autosave=0,bool enable_mix_data=true);
+    virtual void train(std::vector<std::vector<float>> input, std::vector<std::vector<float>> output, int test_data_count=0, int epochs=50, int autosave=0,bool enable_mix_data=true);
     // test_data_count - count of examples in train data for test(it will not be used in training)
     // autosave - the number of epochs to save the model. if 0, no autosave
 

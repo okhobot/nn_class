@@ -266,7 +266,7 @@ std::vector<float> NN::predict(const std::vector<float> &input, int end_layer)
 
 
 
-void NN::train(std::vector<std::vector<float>> &input, std::vector<std::vector<float>> &output, int test_data_count, int epochs, int autosave, bool enable_mix_data)
+void NN::train(std::vector<std::vector<float>> input, std::vector<std::vector<float>> output, int test_data_count, int epochs, int autosave, bool enable_mix_data)
 {
     if(layers.size()==0)
     {
