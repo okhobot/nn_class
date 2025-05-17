@@ -3,16 +3,15 @@ nn_class/obj
 nn_class/*.dat
 nn_class/*-ubyte
 
+nn_class/nn_class.cbp
 nn_class/nn_class.layout
 nn_class/nn_class.depend
 nn_class/nn_class.cscope_file_list
 
 nn_class/kernels/generated/*.cl
 
+naming.txt
 .cache
 .vscode
-.save-failed
-build
 libs
 cmake-build
-naming.txt
