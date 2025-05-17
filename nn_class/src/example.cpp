@@ -139,6 +139,7 @@ int main()
     nn.set_logs_output(&std::cout);//set logs output to console
 
     nn.init(0);//init nn
+    //you can set oclw mode(parallel computing mode), if you set oclw device index
 
 
     std::cout << std::endl;
@@ -149,7 +150,7 @@ int main()
     //9000 dataset examples for training, 1000 - for test
 
     //print first 5 examples with nn predicts
-    for(int j=0; j<5; j++)
+    for(int j=0; j<=5; j++)
     {
         std::cout<<"expected: "<<std::distance(output[j].begin(),std::find(output[j].begin(),output[j].end(),1))<<std::endl;
         std::cout<<"result: ";
