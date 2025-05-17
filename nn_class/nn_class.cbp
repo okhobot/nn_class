@@ -95,12 +95,12 @@
 		<Unit filename="kernels/test_kernel.cl" />
 		<Unit filename="src/NN.cpp" />
 		<Unit filename="src/activations/Activation.cpp" />
+		<Unit filename="src/example.cpp" />
 		<Unit filename="src/layers/Convolutional_layer.cpp" />
 		<Unit filename="src/layers/Fully_connected_layer.cpp" />
 		<Unit filename="src/layers/Image_resize_layer.cpp" />
 		<Unit filename="src/layers/Layer.cpp" />
 		<Unit filename="src/losses/Loss.cpp" />
-		<Unit filename="src/main.cpp" />
 		<Unit filename="src/optimizers/Optimizer.cpp" />
 		<Unit filename="src/optimizers/SGD_optimizer.cpp" />
 		<Extensions>
