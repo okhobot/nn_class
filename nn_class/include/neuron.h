@@ -2,9 +2,9 @@
 #define NEURON_H_
 
 #ifdef __OPENCL_VERSION__
-#define nn_size_type long // 8 bites for cl
+typedef long nn_size_type; // 8 bytes for cl
 #else
-#define nn_size_type long long //8 bites for cpp
+typedef long long nn_size_type; //8 bytes for cpp
 inline float max(float a, float b)
 {
     return a>=b?a:b;
@@ -15,7 +15,7 @@ inline float min(float a, float b)
 }
 #endif
 
-#define nn_type float
+typedef float nn_type;
 #define nn_t_bounds 700 //700 for float; 700000 for int, 126 for char;
 #define nn_type_translate_coef 1.0 //1 for float, 1000 for int, 100 for char
 
