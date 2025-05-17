@@ -150,7 +150,7 @@ int main()
     //9000 dataset examples for training, 1000 - for test
 
     //print first 5 examples with nn predicts
-    for(int j=0; j<=5; j++)
+    for(int j=9999; j>=9995; j--)
     {
         std::cout<<"expected: "<<std::distance(output[j].begin(),std::find(output[j].begin(),output[j].end(),1))<<std::endl;
         std::cout<<"result: ";
