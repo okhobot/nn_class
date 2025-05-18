@@ -65,8 +65,6 @@ void NN::init(int device_index, unsigned seed)
 
     if(device_index>-1)
     {
-        oclw.init_kernels({"test_kernel"}, "kernels/");
-
         std::sort(kernels.begin(), kernels.end());
         kernels.erase(std::unique(kernels.begin(), kernels.end()), kernels.end());
 
