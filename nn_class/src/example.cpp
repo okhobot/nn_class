@@ -60,6 +60,8 @@ void read_MNIST_images(std::vector<std::vector<float>> &arr, std::string path)
             }
         }
     }
+    else
+        debug_utils::call_error(1,"read_MNIST_images","file not found", "file name: "+path);
 }
 
 void read_MNIST_labels(std::vector<std::vector<float>> &arr, std::string path)
@@ -87,6 +89,8 @@ void read_MNIST_labels(std::vector<std::vector<float>> &arr, std::string path)
             arr[i][0]= temp;
         }
     }
+    else
+        debug_utils::call_error(1,"read_MNIST_labels","file not found", "file name: "+path);
 }
 
 
