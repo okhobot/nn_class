@@ -92,7 +92,6 @@
 		<Unit filename="kernels/optimizers/Optimizer/optimizer_update_w_params_kernel.cl" />
 		<Unit filename="kernels/optimizers/SGD_optimizer/sgd_optimizer_update_b_params_kernel.cl" />
 		<Unit filename="kernels/optimizers/SGD_optimizer/sgd_optimizer_update_w_params_kernel.cl" />
-		<Unit filename="kernels/test_kernel.cl" />
 		<Unit filename="src/NN.cpp" />
 		<Unit filename="src/activations/Activation.cpp" />
 		<Unit filename="src/example.cpp" />
