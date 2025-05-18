@@ -60,7 +60,7 @@ void Layer::generate_kernels(Loss *loss)
 
 
 
-void Layer::load_layer(std::ifstream &input)
+void Layer::load(std::ifstream &input)
 {
     if(oclw->is_inited())
     {
@@ -78,7 +78,7 @@ void Layer::load_layer(std::ifstream &input)
     }
     catch(const char* error_message)
     {
-        debug_utils::call_error(0,"Layer::load_layer", "error while loading weights", error_message);
+        debug_utils::call_error(0,"Layer::load", "error while loading weights", error_message);
     }
     if(oclw->is_inited())
     {
@@ -89,7 +89,7 @@ void Layer::load_layer(std::ifstream &input)
     }
 }
 
-void Layer::save_layer(std::ofstream &output)
+void Layer::save(std::ofstream &output)
 {
     if(oclw->is_inited())
     {

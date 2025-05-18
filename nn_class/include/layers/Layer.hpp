@@ -67,9 +67,9 @@ public:
     virtual void calculate_ng_oclw(const std::string &input_key) {};
     //
 
-    virtual void load_layer(std::ifstream &input);
+    virtual void load(std::ifstream &input);
 
-    virtual void save_layer(std::ofstream &output);
+    virtual void save(std::ofstream &output);
 
     virtual void generate_kernels(Loss *loss);// if need to generate some kernels
 

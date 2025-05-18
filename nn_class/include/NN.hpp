@@ -90,8 +90,8 @@ public:
     // autosave - the number of epochs to save the model. if 0, no autosave
 
 
-    virtual void load_model(std::string file_name=default_model_name);
+    virtual void load(std::string file_name=default_model_name);
 
-    virtual void save_model(std::string file_name=default_model_name);
+    virtual void save(std::string file_name=default_model_name);
 
 };
