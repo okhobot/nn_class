@@ -38,7 +38,7 @@ after initializing NN, add layers, starting with the output and ending with the 
 
 ## Сompilation 
 - Make sure that the opencl_wrapper library is configured for the project
-- For the compiled project to work using OpenCL, the kernel repository and the neuron file are required.h follow the path /include/neuron.h in the project repository
+- For the compiled project to work using OpenCL, the kernel repository and the neuron.h file follow the path /include/neuron.h are required in the project repository
 ### An example of the structure of an assembled project
 - nn_class.exe
 - include/
