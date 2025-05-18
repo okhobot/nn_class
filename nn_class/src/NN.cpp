@@ -78,7 +78,7 @@ void NN::init(int device_index, unsigned seed)
 
 }
 
-void NN::save_model(std::string file_name)
+void NN::save(std::string file_name)
 {
     size_t layers_data_size=0;
     auto ms=get_milliseconds_now();
@@ -99,7 +99,7 @@ void NN::save_model(std::string file_name)
 
     for(int l=0; l<layers.size(); l++)
     {
-        layers[l]->save_layer(f);
+        layers[l]->save(f);
         if(logs_output) (*logs_output)<<"saved layer: "<<l<<std::endl;
     }
 
@@ -115,7 +115,7 @@ void NN::save_model(std::string file_name)
         (*logs_output)<<"SAVED"<<std::endl<<"ms spent: "<<get_milliseconds_now()-ms<<std::endl;
 }
 
-void NN::load_model(std::string file_name)
+void NN::load(std::string file_name)
 {
     size_t layers_data_size=0, file_layers_data_size;
     if(model_name!=default_model_name)
@@ -136,7 +136,7 @@ void NN::load_model(std::string file_name)
 
     if(layers_data_size!=file_layers_data_size)
     {
-        debug_utils::call_error(0,"load_model","the file size does not match the size of the model");
+        debug_utils::call_error(0,"load","the file size does not match the size of the model");
         f.close();
         return;
     }
@@ -147,7 +147,7 @@ void NN::load_model(std::string file_name)
 
     for(int l=0; l<layers.size(); l++)
     {
-        layers[l]->load_layer(f);
+        layers[l]->load(f);
         if(logs_output)
             (*logs_output)<<"loaded layer: "<<l<<std::endl;
     }
@@ -388,7 +388,7 @@ void NN::train(std::vector<std::vector<float>> input, std::vector<std::vector<fl
 
         optimizer->reduce_lr();
 
-        if(autosave!=0 && epoch%autosave==0)save_model();
+        if(autosave!=0 && epoch%autosave==0)save();
     }
 
 

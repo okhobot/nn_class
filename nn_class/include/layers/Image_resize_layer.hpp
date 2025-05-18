@@ -37,9 +37,9 @@ public:
     void calculate_previous_ng_oclw(const std::string &previous_gradients_key, size_t previous_gradients_size)override;
 
 
-    void load_layer(std::ifstream &input)override {};
+    void load(std::ifstream &input)override {};
 
-    void save_layer(std::ofstream &output)override {};
+    void save(std::ofstream &output)override {};
 
     nn_size_type get_layer_res_size() override
     {
