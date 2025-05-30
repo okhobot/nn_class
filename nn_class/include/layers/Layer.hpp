@@ -150,10 +150,12 @@ public:
         return params_count+neurons_count;
     }
 
+    ///setters
     virtual void set_next_layer(Layer *a_next_layer, bool forced=false)
     {
         if(next_layer==0 || forced)
             next_layer=a_next_layer;
     }
 
+    virtual void set_layer_res(const std::vector<float> &res);
 };
