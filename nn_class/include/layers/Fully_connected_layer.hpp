@@ -6,7 +6,7 @@
 class Fully_connected_layer : public Layer
 {
 
-
+protected:
 
     void calculate_gradients_with_ng(const float *input)override;
     void calculate_gradients_with_ng_oclw(const std::string &input_key)override;
