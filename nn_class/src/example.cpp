@@ -109,15 +109,13 @@ int main()
 {
     //reading dataset
     std::vector<std::vector<float>> input, output;
-    read_MNIST_images(input,"t10k-images.idx3-ubyte");
-    read_MNIST_labels(output,"t10k-labels.idx1-ubyte");
+    read_MNIST_images(input,"train-images.idx3-ubyte");
+    read_MNIST_labels(output,"train-labels.idx1-ubyte");
 
     output=convert_output(output);
-    input.resize(10000);
-    output.resize(10000);
 
     //creating nn params
-    SGD_optimizer opt(16,0.0005,1.05);
+    SGD_optimizer opt(16,0.0005,1.05,1e-7,1e-3);
     LogLoss loss;
     LeakyReLU_activation l_relu;
     Sigmoid_activation sigmoid;
@@ -142,7 +140,7 @@ int main()
 
     nn.set_logs_output(&std::cout);//set logs output to console
 
-    nn.init(0);//init nn
+    nn.init();//init nn
     //you can set oclw mode(parallel computing mode), if you set oclw device index
 
 
@@ -150,11 +148,11 @@ int main()
     nn.show();//show nn data
     std::cout << std::endl;
 
-    nn.train(input,output,1000,10,0,false);//train nn
-    //9000 dataset examples for training, 1000 - for test
+    nn.train(input,output,1000,2,0,false);//train nn
+    //1000 dataset examples for test
 
     //print examples with nn predicts
-    for(int j=9999; j>=9995; j--)
+    for(int j=input.size()-1; j>=input.size()-6; j--)
     {
         std::cout<<"expected: "<<std::distance(output[j].begin(),std::find(output[j].begin(),output[j].end(),1))<<std::endl;
         std::cout<<"result: ";
@@ -162,9 +160,6 @@ int main()
         for(int i=0; i<res.size(); i++)std::cout << res[i] << " ";
         std::cout<<std::endl;
     }
-
-
-
 
 
     return 0;
