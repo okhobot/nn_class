@@ -34,7 +34,7 @@ after initializing NN, add layers, starting with the output and ending with the 
 
 ## Examples
 - An example of using the library with MNIST dataset is described in the file src/example.cpp in the main branch
-- MNIST dataset files are required [https://www.kaggle.com/datasets/hojjatk/mnist-dataset?select=t10k-images.idx3-ubyte] [https://www.kaggle.com/datasets/hojjatk/mnist-dataset?select=t10k-labels.idx1-ubyte]
+- MNIST dataset files are required [https://www.kaggle.com/datasets/hojjatk/mnist-dataset?select=train-images.idx3-ubyte] [https://www.kaggle.com/datasets/hojjatk/mnist-dataset?select=train-labels.idx1-ubyte]
 
 ## Сompilation 
 - Make sure that the opencl_wrapper library is configured for the project
