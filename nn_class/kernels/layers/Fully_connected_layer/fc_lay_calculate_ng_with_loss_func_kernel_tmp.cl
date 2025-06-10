@@ -1,5 +1,5 @@
 #include <include/neuron.h>
-__kernel void fcl_lay_calculate_ng_with_loss_func_kernel(
+__kernel void fc_lay_calculate_ng_with_loss_func_kernel(
     __global neuron *neurons,
     __global const float *output,
     __global float *layer_res,
