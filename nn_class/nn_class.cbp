@@ -77,12 +77,11 @@
 		<Unit filename="kernels/layers/Convolutional_layer/conv_lay_calculate_previous_ng_kernel.cl" />
 		<Unit filename="kernels/layers/Convolutional_layer/conv_lay_convert_to_neurons_kernel.cl" />
 		<Unit filename="kernels/layers/Convolutional_layer/conv_lay_predict_kernel.cl" />
-		<Unit filename="kernels/layers/Fully_connected_layer/fcl_lay_calculate_gradients_with_ng_kernel.cl" />
-		<Unit filename="kernels/layers/Fully_connected_layer/fcl_lay_calculate_ng_kernel.cl" />
-		<Unit filename="kernels/layers/Fully_connected_layer/fcl_lay_calculate_ng_with_loss_func_kernel_tmp.cl" />
-		<Unit filename="kernels/layers/Fully_connected_layer/fcl_lay_calculate_previous_ng_in_neurons_kernel.cl" />
-		<Unit filename="kernels/layers/Fully_connected_layer/fcl_lay_calculate_previous_ng_kernel.cl" />
-		<Unit filename="kernels/layers/Fully_connected_layer/fcl_lay_predict_kernel.cl" />
+		<Unit filename="kernels/layers/Fully_connected_layer/fc_lay_calculate_gradients_with_ng_kernel.cl" />
+		<Unit filename="kernels/layers/Fully_connected_layer/fc_lay_calculate_ng_with_loss_func_kernel_tmp.cl" />
+		<Unit filename="kernels/layers/Fully_connected_layer/fc_lay_calculate_previous_ng_in_neurons_kernel.cl" />
+		<Unit filename="kernels/layers/Fully_connected_layer/fc_lay_calculate_previous_ng_kernel.cl" />
+		<Unit filename="kernels/layers/Fully_connected_layer/fc_lay_predict_kernel.cl" />
 		<Unit filename="kernels/layers/Image_resize_layer/fill_float_arr_kernel.cl" />
 		<Unit filename="kernels/layers/Image_resize_layer/fill_neurons_gradients_kernel.cl" />
 		<Unit filename="kernels/layers/Image_resize_layer/imres_lay_calculate_ng_with_loss_func_kernel_tmp.cl" />
