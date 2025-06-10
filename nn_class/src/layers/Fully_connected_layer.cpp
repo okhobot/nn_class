@@ -35,11 +35,11 @@ void Fully_connected_layer::init(int a_layer_index, OCLW *a_oclw)
     {
         km.set_default_path("kernels/layers/Fully_connected_layer/");
 
-        km.add_kernel("predict","fcl_lay_predict_kernel");
-        km.add_kernel("calculate_gradients_with_ng","fcl_lay_calculate_gradients_with_ng_kernel");
-        km.add_kernel("calculate_ng_main_lay","fcl_lay_calculate_ng_with_loss_func_kernel_tmp");
-        km.add_kernel("calculate_previous_ng","fcl_lay_calculate_previous_ng_kernel");
-        km.add_kernel("calculate_previous_ng_in_neurons","fcl_lay_calculate_previous_ng_in_neurons_kernel");
+        km.add_kernel("predict","fc_lay_predict_kernel");
+        km.add_kernel("calculate_gradients_with_ng","fc_lay_calculate_gradients_with_ng_kernel");
+        km.add_kernel("calculate_ng_main_lay","fc_lay_calculate_ng_with_loss_func_kernel_tmp");
+        km.add_kernel("calculate_previous_ng","fc_lay_calculate_previous_ng_kernel");
+        km.add_kernel("calculate_previous_ng_in_neurons","fc_lay_calculate_previous_ng_in_neurons_kernel");
 
 
         weights_key="l_"+std::to_string(layer_index)+"_weights";
