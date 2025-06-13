@@ -1,5 +1,5 @@
 #include <include/neuron.h>
-__kernel void fc_lay_predict_kernel(
+__kernel void dense_lay_predict_kernel(
     __global neuron *neurons,
     __global const float *input,
     __global float *lay_res,

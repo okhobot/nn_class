@@ -1,8 +1,8 @@
-#include <layers/Fully_connected_layer.hpp>
+#include <layers/Dense_layer.hpp>
 
 
 
-Fully_connected_layer::Fully_connected_layer(Activation *a_activation, int a_data_size, int a_neurons_count, float a_weights_dispersion,float a_weights_center, Layer *a_next_layer)
+Dense_layer::Dense_layer(Activation *a_activation, int a_data_size, int a_neurons_count, float a_weights_dispersion,float a_weights_center, Layer *a_next_layer)
 {
     next_layer=a_next_layer;
 
@@ -18,7 +18,7 @@ Fully_connected_layer::Fully_connected_layer(Activation *a_activation, int a_dat
 }
 
 
-void Fully_connected_layer::init(int a_layer_index, OCLW *a_oclw)
+void Dense_layer::init(int a_layer_index, OCLW *a_oclw)
 {
     layer_index=a_layer_index;
     oclw=a_oclw;
@@ -33,13 +33,13 @@ void Fully_connected_layer::init(int a_layer_index, OCLW *a_oclw)
 
     if(oclw->is_inited())
     {
-        km.set_default_path("kernels/layers/Fully_connected_layer/");
+        km.set_default_path("kernels/layers/Dense_layer/");
 
-        km.add_kernel("predict","fc_lay_predict_kernel");
-        km.add_kernel("calculate_gradients_with_ng","fc_lay_calculate_gradients_with_ng_kernel");
-        km.add_kernel("calculate_ng_main_lay","fc_lay_calculate_ng_with_loss_func_kernel_tmp");
-        km.add_kernel("calculate_previous_ng","fc_lay_calculate_previous_ng_kernel");
-        km.add_kernel("calculate_previous_ng_in_neurons","fc_lay_calculate_previous_ng_in_neurons_kernel");
+        km.add_kernel("predict","dense_lay_predict_kernel");
+        km.add_kernel("calculate_gradients_with_ng","dense_lay_calculate_gradients_with_ng_kernel");
+        km.add_kernel("calculate_ng_main_lay","dense_lay_calculate_ng_with_loss_func_kernel_tmp");
+        km.add_kernel("calculate_previous_ng","dense_lay_calculate_previous_ng_kernel");
+        km.add_kernel("calculate_previous_ng_in_neurons","dense_lay_calculate_previous_ng_in_neurons_kernel");
 
 
         weights_key="l_"+std::to_string(layer_index)+"_weights";
@@ -68,7 +68,7 @@ void Fully_connected_layer::init(int a_layer_index, OCLW *a_oclw)
 
 
 
-std::vector<float> Fully_connected_layer::predict(std::vector<float> &input)
+std::vector<float> Dense_layer::predict(std::vector<float> &input)
 {
 
     for(nn_size_type i=0; i<neurons_count; i++)
@@ -87,7 +87,7 @@ std::vector<float> Fully_connected_layer::predict(std::vector<float> &input)
     return layer_res;
 }
 
-std::string Fully_connected_layer::predict_oclw(const std::string &input_key)
+std::string Dense_layer::predict_oclw(const std::string &input_key)
 {
     oclw->process_oclw(km.get("predict"), {neurons_key,input_key,layer_res_key,weights_key}, {}, {data_size,neurons_count},neurons_count);
 
@@ -97,7 +97,7 @@ std::string Fully_connected_layer::predict_oclw(const std::string &input_key)
 }
 
 
-void Fully_connected_layer::calculate_gradients_with_ng(const float *input)
+void Dense_layer::calculate_gradients_with_ng(const float *input)
 {
     for(int n_i=0; n_i<neurons_count; n_i++)
     {
@@ -109,13 +109,13 @@ void Fully_connected_layer::calculate_gradients_with_ng(const float *input)
     }
 }
 
-void Fully_connected_layer::calculate_gradients_with_ng_oclw(const std::string &input_key)
+void Dense_layer::calculate_gradients_with_ng_oclw(const std::string &input_key)
 {
     oclw->process_oclw(km.get("calculate_gradients_with_ng"), {neurons_key,input_key,gradients_key}, {}, {neurons_count, data_size},neurons_count,data_size);
 }
 
 
-void Fully_connected_layer::calculate_ng_main_lay(Loss *loss, const float *input, const float *output)
+void Dense_layer::calculate_ng_main_lay(Loss *loss, const float *input, const float *output)
 {
     for(int i=0; i<neurons_count; i++)
     {
@@ -128,7 +128,7 @@ void Fully_connected_layer::calculate_ng_main_lay(Loss *loss, const float *input
     calculate_gradients_with_ng(input);
 }
 
-void Fully_connected_layer::calculate_ng_main_lay_oclw(const std::string &input_key, const std::string &output_key)
+void Dense_layer::calculate_ng_main_lay_oclw(const std::string &input_key, const std::string &output_key)
 {
     oclw->process_oclw(km.get("calculate_ng_main_lay"), {neurons_key,output_key,layer_res_key}, {}, {neurons_count},neurons_count);
 
@@ -138,7 +138,7 @@ void Fully_connected_layer::calculate_ng_main_lay_oclw(const std::string &input_
 }
 
 
-void Fully_connected_layer::calculate_previous_ng_in_neurons(std::vector<neuron> &previous_neurons)
+void Dense_layer::calculate_previous_ng_in_neurons(std::vector<neuron> &previous_neurons)
 {
     for(int i=0; i<previous_neurons.size(); i++)
     {
@@ -151,11 +151,11 @@ void Fully_connected_layer::calculate_previous_ng_in_neurons(std::vector<neuron>
         }
     }
 }
-void Fully_connected_layer::calculate_previous_ng_in_neurons_oclw(const std::string &previous_neurons_key, size_t previous_neurons_size)
+void Dense_layer::calculate_previous_ng_in_neurons_oclw(const std::string &previous_neurons_key, size_t previous_neurons_size)
 {
     oclw->process_oclw(km.get("calculate_previous_ng_in_neurons"), {previous_neurons_key, neurons_key,weights_key}, {}, {neurons_count, previous_neurons_size},previous_neurons_size);
 }
-void Fully_connected_layer::calculate_previous_ng(std::vector<float> &previous_gradients)
+void Dense_layer::calculate_previous_ng(std::vector<float> &previous_gradients)
 {
     for(int i=0; i<previous_gradients.size(); i++)
     {
@@ -168,12 +168,12 @@ void Fully_connected_layer::calculate_previous_ng(std::vector<float> &previous_g
         }
     }
 }
-void Fully_connected_layer::calculate_previous_ng_oclw(const std::string &previous_gradients_key, size_t previous_gradients_size)
+void Dense_layer::calculate_previous_ng_oclw(const std::string &previous_gradients_key, size_t previous_gradients_size)
 {
     oclw->process_oclw(km.get("calculate_previous_ng"), {neurons_key,weights_key,previous_gradients_key}, {}, {neurons_count, previous_gradients_size},previous_gradients_size);
 }
 
-void Fully_connected_layer::calculate_ng(const float *input)
+void Dense_layer::calculate_ng(const float *input)
 {
 
     next_layer->calculate_previous_ng_in_neurons(neurons);
@@ -185,7 +185,7 @@ void Fully_connected_layer::calculate_ng(const float *input)
     calculate_gradients_with_ng(input);
 }
 
-void Fully_connected_layer::calculate_ng_oclw(const std::string &input_key)
+void Dense_layer::calculate_ng_oclw(const std::string &input_key)
 {
 
     next_layer->calculate_previous_ng_in_neurons_oclw(neurons_key,neurons_count);
