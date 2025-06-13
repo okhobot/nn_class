@@ -3,7 +3,7 @@
 #include <layers/Layer.hpp>
 
 
-class Fully_connected_layer : public Layer
+class Dense_layer : public Layer
 {
 
 protected:
@@ -13,8 +13,8 @@ protected:
 
 
 public:
-    Fully_connected_layer() {};
-    Fully_connected_layer(Activation *a_activation, int a_data_size, int a_neurons_count, float a_weights_dispersion=-1,float a_weights_center=0, Layer *a_next_layer=0);
+    Dense_layer() {};
+    Dense_layer(Activation *a_activation, int a_data_size, int a_neurons_count, float a_weights_dispersion=-1,float a_weights_center=0, Layer *a_next_layer=0);
     // a_activation - layer activation
     // a_data_size - input size
     // a_neurons_count - out size

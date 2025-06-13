@@ -7,7 +7,7 @@
 #include <NN.hpp>
 #include <layers/Image_resize_layer.hpp>
 #include <layers/Convolutional_layer.hpp>
-#include <layers/Fully_connected_layer.hpp>
+#include <layers/Dense_layer.hpp>
 #include <optimizers/SGD_optimizer.hpp>
 #include <activations/LeakyReLU_activation.hpp>
 #include <activations/Sigmoid_activation.hpp>
@@ -123,8 +123,8 @@ int main()
     //creating nn layers
     Convolutional_layer input_lay(&l_relu,28,28,1,32);//32 conv. kernels
     Image_resize_layer irl(26,26,26,26,32,1);//add frame with size 1 pix to output image
-    Fully_connected_layer hide_lay(&l_relu,irl.get_layer_res_size(),128,-2);// input size - from irl output size, 128 neurons
-    Fully_connected_layer out_lay(&sigmoid,128,10,-2);// input size - 128, output - 10
+    Dense_layer hide_lay(&l_relu,irl.get_layer_res_size(),128,-2);// input size - from irl output size, 128 neurons
+    Dense_layer out_lay(&sigmoid,128,10,-2);// input size - 128, output - 10
 
 
     NN nn(&opt,&loss);//create nn with nn params
@@ -140,7 +140,7 @@ int main()
 
     nn.set_logs_output(&std::cout);//set logs output to console
 
-    nn.init();//init nn
+    nn.init(0);//init nn
     //you can set oclw mode(parallel computing mode), if you set oclw device index
 
 

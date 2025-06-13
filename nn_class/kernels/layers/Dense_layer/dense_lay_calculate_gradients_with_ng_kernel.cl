@@ -1,5 +1,5 @@
 #include <include/neuron.h>
-__kernel void fc_lay_calculate_gradients_with_ng_kernel(
+__kernel void dense_lay_calculate_gradients_with_ng_kernel(
     __global neuron *neurons,
     __global const float *input,
     __global nn_type *gradients,

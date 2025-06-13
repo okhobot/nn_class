@@ -54,7 +54,7 @@
 		<Unit filename="include/activations/ReLU_activation.hpp" />
 		<Unit filename="include/activations/Sigmoid_activation.hpp" />
 		<Unit filename="include/layers/Convolutional_layer.hpp" />
-		<Unit filename="include/layers/Fully_connected_layer.hpp" />
+		<Unit filename="include/layers/Dense_layer.hpp" />
 		<Unit filename="include/layers/Image_resize_layer.hpp" />
 		<Unit filename="include/layers/Layer.hpp" />
 		<Unit filename="include/losses/LogLoss.hpp" />
@@ -77,11 +77,11 @@
 		<Unit filename="kernels/layers/Convolutional_layer/conv_lay_calculate_previous_ng_kernel.cl" />
 		<Unit filename="kernels/layers/Convolutional_layer/conv_lay_convert_to_neurons_kernel.cl" />
 		<Unit filename="kernels/layers/Convolutional_layer/conv_lay_predict_kernel.cl" />
-		<Unit filename="kernels/layers/Fully_connected_layer/fc_lay_calculate_gradients_with_ng_kernel.cl" />
-		<Unit filename="kernels/layers/Fully_connected_layer/fc_lay_calculate_ng_with_loss_func_kernel_tmp.cl" />
-		<Unit filename="kernels/layers/Fully_connected_layer/fc_lay_calculate_previous_ng_in_neurons_kernel.cl" />
-		<Unit filename="kernels/layers/Fully_connected_layer/fc_lay_calculate_previous_ng_kernel.cl" />
-		<Unit filename="kernels/layers/Fully_connected_layer/fc_lay_predict_kernel.cl" />
+		<Unit filename="kernels/layers/Dense_layer/dense_lay_calculate_gradients_with_ng_kernel.cl" />
+		<Unit filename="kernels/layers/Dense_layer/dense_lay_calculate_ng_with_loss_func_kernel_tmp.cl" />
+		<Unit filename="kernels/layers/Dense_layer/dense_lay_calculate_previous_ng_in_neurons_kernel.cl" />
+		<Unit filename="kernels/layers/Dense_layer/dense_lay_calculate_previous_ng_kernel.cl" />
+		<Unit filename="kernels/layers/Dense_layer/dense_lay_predict_kernel.cl" />
 		<Unit filename="kernels/layers/Image_resize_layer/fill_float_arr_kernel.cl" />
 		<Unit filename="kernels/layers/Image_resize_layer/fill_neurons_gradients_kernel.cl" />
 		<Unit filename="kernels/layers/Image_resize_layer/imres_lay_calculate_ng_with_loss_func_kernel_tmp.cl" />
@@ -95,7 +95,7 @@
 		<Unit filename="src/activations/Activation.cpp" />
 		<Unit filename="src/example.cpp" />
 		<Unit filename="src/layers/Convolutional_layer.cpp" />
-		<Unit filename="src/layers/Fully_connected_layer.cpp" />
+		<Unit filename="src/layers/Dense_layer.cpp" />
 		<Unit filename="src/layers/Image_resize_layer.cpp" />
 		<Unit filename="src/layers/Layer.cpp" />
 		<Unit filename="src/losses/Loss.cpp" />
