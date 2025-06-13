@@ -115,7 +115,7 @@ int main()
     output=convert_output(output);
 
     //creating nn params
-    SGD_optimizer opt(16,0.0005,1.05,1e-7,1e-3);
+    SGD_optimizer opt(16,0.0005,1.05,0,1e-7);
     LogLoss loss;
     LeakyReLU_activation l_relu;
     Sigmoid_activation sigmoid;
@@ -140,7 +140,7 @@ int main()
 
     nn.set_logs_output(&std::cout);//set logs output to console
 
-    nn.init(0);//init nn
+    nn.init();//init nn
     //you can set oclw mode(parallel computing mode), if you set oclw device index
 
 

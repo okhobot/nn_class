@@ -33,6 +33,8 @@ protected:
     nn_size_type data_size=0, neurons_count=0;
     int layer_index=0;
 
+    bool inited=false;
+
 
 
     virtual void generate_weights(float dispersion, float center);
@@ -43,7 +45,10 @@ protected:
 
 public:
 
-    virtual void init(int a_layer_index, OCLW *a_oclw) {};
+    virtual void init(int a_layer_index, OCLW *a_oclw)
+    {
+        inited=true;
+    };
 
     virtual std::vector<float> predict(std::vector<float> &input)
     {
@@ -158,4 +163,9 @@ public:
     }
 
     virtual void set_layer_res(const std::vector<float> &res);
+
+    virtual bool is_inited()
+    {
+        return inited;
+    }
 };
