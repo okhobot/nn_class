@@ -104,6 +104,8 @@ void Image_resize_layer::init(int a_layer_index, OCLW *a_oclw)
 
         if(layer_index==0)neurons.resize(1);
     }
+
+    inited=true;
 }
 
 

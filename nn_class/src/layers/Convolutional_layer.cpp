@@ -86,6 +86,8 @@ void Convolutional_layer::init(int a_layer_index, OCLW *a_oclw)
         converted_layer_res.resize(neurons_count);
         gradients.resize(params_count,0);
     }
+
+    inited=true;
 }
 
 std::vector<float> Convolutional_layer::predict(std::vector<float> &input)

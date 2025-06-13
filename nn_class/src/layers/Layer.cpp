@@ -122,9 +122,13 @@ std::vector<std::string> Layer::get_kernels_paths()
 
 void Layer::set_layer_res(const std::vector<float> &res)
 {
-    if(res.size()>get_layer_res_size()){debug_utils::call_error(0,"Layer - set_layer_res", "the size of the array is larger than required");return;}
+    if(res.size()>get_layer_res_size())
+    {
+        debug_utils::call_error(0,"Layer - set_layer_res", "the size of the array is larger than required");
+        return;
+    }
     layer_res.resize(get_layer_res_size());
-    for(int i=0;i<res.size();i++)layer_res[i]=res[i];
+    for(int i=0; i<res.size(); i++)layer_res[i]=res[i];
 
     if(oclw->is_inited())
     {

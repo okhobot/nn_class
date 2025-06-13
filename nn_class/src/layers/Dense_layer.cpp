@@ -62,7 +62,7 @@ void Dense_layer::init(int a_layer_index, OCLW *a_oclw)
         gradients.resize(params_count,0);
     }
 
-
+    inited=true;
 }
 
 

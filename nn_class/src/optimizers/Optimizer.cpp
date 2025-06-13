@@ -1,6 +1,6 @@
 #include <optimizers/Optimizer.hpp>
 
-Optimizer::Optimizer(float a_learning_rate, float a_lr_reduction_coef, float a_min_lr,float a_regularization_coef,OCLW *a_oclw)
+Optimizer::Optimizer(float a_learning_rate, float a_lr_reduction_coef, float a_regularization_coef, float a_min_lr,float a_max_lr,OCLW *a_oclw)
 {
     km.set_default_path("kernels/optimizers/Optimizer/");
     km.add_kernel("update_b_params","optimizer_update_b_params_kernel");
@@ -15,6 +15,7 @@ Optimizer::Optimizer(float a_learning_rate, float a_lr_reduction_coef, float a_m
         debug_utils::call_warning("Optimizer init","invalid value","lr_reduction_coef cannot be 0, to ensure that the learning_rate does not decrease, set the value of lr_reduction_coefficient to 1");
     lr_reduction_coef=a_lr_reduction_coef;
     min_lr=a_min_lr;
+    max_lr=a_max_lr;
 
 }
 
