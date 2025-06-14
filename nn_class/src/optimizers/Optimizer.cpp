@@ -1,12 +1,11 @@
 #include <optimizers/Optimizer.hpp>
 
-Optimizer::Optimizer(float a_learning_rate, float a_lr_reduction_coef, float a_regularization_coef, float a_min_lr,float a_max_lr,OCLW *a_oclw)
+Optimizer::Optimizer(float a_learning_rate, float a_lr_reduction_coef, float a_regularization_coef, float a_min_lr,float a_max_lr)
 {
     km.set_default_path("kernels/optimizers/Optimizer/");
     km.add_kernel("update_b_params","optimizer_update_b_params_kernel");
     km.add_kernel("update_w_params","optimizer_update_w_params_kernel");
 
-    oclw=a_oclw;
     learning_rate=a_learning_rate;
 
     regularization_coef=a_regularization_coef;

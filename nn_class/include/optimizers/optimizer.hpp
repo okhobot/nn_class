@@ -14,11 +14,11 @@ protected:
     float lr_reduction_coef, min_lr, max_lr;
     nn_type *weights_ptr,*gradients_ptr;
 
-    OCLW *oclw;
+    OCLW *oclw=0;
     neuron *neurons_ptr;
 
 public:
-    Optimizer(float a_learning_rate=0.1, float a_lr_reduction_coef=1, float a_regularization_coef=0, float a_min_lr=1e-7,float a_max_lr=5e-1,OCLW *a_oclw=0) ;
+    Optimizer(float a_learning_rate=0.1, float a_lr_reduction_coef=1, float a_regularization_coef=0, float a_min_lr=1e-7,float a_max_lr=5e-1) ;
     // lr_reduction_coef - coefficient of change of learning_rate
     // a_min_lr - fuzzy minimal learning_rate
     // a_max_lr - fuzzy minimum learning_rate
