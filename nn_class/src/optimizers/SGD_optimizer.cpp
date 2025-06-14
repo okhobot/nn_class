@@ -1,7 +1,7 @@
 #include <optimizers/SGD_optimizer.hpp>
 
 SGD_optimizer::SGD_optimizer(int a_batch_size, float a_learning_rate, float a_lr_reduction_coef, float a_regularization_coef, float a_min_lr, float a_max_lr) :
-    Optimizer(a_learning_rate,a_lr_reduction_coef,a_regularization_coef,a_min_lr,a_max_lr,a_oclw)
+    Optimizer(a_learning_rate,a_lr_reduction_coef,a_regularization_coef,a_min_lr,a_max_lr)
 {
 
     km.set_default_path("kernels/optimizers/SGD_optimizer/");

@@ -27,14 +27,14 @@ public:
 
     virtual void update_params_oclw(Layer *layer, const nn_size_type &data_index);
 
-    void reduce_lr()
+    virtual void reduce_lr()
     {
         if(learning_rate>min_lr && learning_rate<max_lr)learning_rate/=lr_reduction_coef;
     }
 
 
     //setters
-    void set_oclw(OCLW *a_oclw)
+    virtual void set_oclw(OCLW *a_oclw)
     {
         oclw=a_oclw;
     }
