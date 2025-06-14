@@ -8,8 +8,8 @@ __kernel void conv_lay_calculate_ng_with_loss_func_kernel(
     const long data_size
 )
 {
-    long neuron_index = get_global_id(0); // getting the cycle index
-    if(neuron_index>=data_size)return; // checking for out of bounds of array
+    long neuron_index = get_global_id(0);
+    if(neuron_index>=data_size)return;
 
     neurons[neuron_index].gradient=0;
     converted_layer_res[neuron_index]=0;

@@ -17,11 +17,11 @@ __kernel void conv_lay_predict_kernel(
     const long x_size
 )
 {
-    long neuron_index = get_global_id(0); // getting the cycle index
+    long neuron_index = get_global_id(0);
     long y = get_global_id(1)*y_step;
     long x = get_global_id(2)*x_step;
 
-    if(neuron_index>=neurons_count)return; // checking for out of bounds of array
+    if(neuron_index>=neurons_count)return;
     if(y+ny_size>y_size)return;
     if(x+nx_size>x_size)return;
 

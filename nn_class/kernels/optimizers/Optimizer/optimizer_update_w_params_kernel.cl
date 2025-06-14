@@ -7,8 +7,8 @@ __kernel void optimizer_update_w_params_kernel(
     const long data_size
 )
 {
-    long i = get_global_id(0); // getting the cycle index
-    if(i>=data_size)return; // checking for out of bounds of array
+    long i = get_global_id(0);
+    if(i>=data_size)return;
     add(&gradients[i], regularization_coef*weights[i]);
     add(&weights[i], learning_rate*gradients[i]);
     gradients[i]=0;

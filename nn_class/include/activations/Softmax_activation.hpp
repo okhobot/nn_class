@@ -36,19 +36,23 @@ public:
     {
         //get max val
         max_tmp = layer_res[0];
-        for (nn_size_type i = 1; i < neuron_count; ++i) {
-            if (layer_res[i] > max_tmp) {
+        for (nn_size_type i = 1; i < neuron_count; ++i)
+        {
+            if (layer_res[i] > max_tmp)
+            {
                 max_tmp = layer_res[i];
             }
         }
 
         sum_tmp = 0;
-        for (nn_size_type i = 0; i < neuron_count; ++i) {
+        for (nn_size_type i = 0; i < neuron_count; ++i)
+        {
             layer_res[i] = expf(layer_res[i] - max_tmp);
             sum_tmp += layer_res[i];
         }
 
-        for (nn_size_type i = 0; i < neuron_count; ++i) {
+        for (nn_size_type i = 0; i < neuron_count; ++i)
+        {
             layer_res[i] /= sum_tmp;
         }
     }
@@ -57,11 +61,13 @@ public:
     void multiply_neuron_gradient_by_activation_derivative(neuron *neurons, float *layer_res, nn_size_type neuron_count) override
     {
         sum_tmp = 0;//grad_dot_output
-        for (nn_size_type i = 0; i < neuron_count; ++i) {
+        for (nn_size_type i = 0; i < neuron_count; ++i)
+        {
             sum_tmp += neurons[i].gradient * layer_res[i];
         }
 
-        for (nn_size_type i = 0; i < neuron_count; ++i) {
+        for (nn_size_type i = 0; i < neuron_count; ++i)
+        {
             neurons[i].gradient = layer_res[i] * (neurons[i].gradient - sum_tmp);
         }
     }

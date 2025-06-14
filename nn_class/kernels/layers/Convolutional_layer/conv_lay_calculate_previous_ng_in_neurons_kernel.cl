@@ -11,8 +11,8 @@ __kernel void conv_lay_calculate_previous_ng_in_neurons_kernel(
     const long data_size
 )
 {
-    long i = get_global_id(0); // getting the cycle index
-    if(i>=data_size)return; // checking for out of bounds of array
+    long i = get_global_id(0);
+    if(i>=data_size)return;
 
     previous_neurons[i].gradient=0;
     for(int j=0; j<neurons_count; j++)

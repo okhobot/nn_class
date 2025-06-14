@@ -5,8 +5,8 @@ __kernel void fill_neurons_gradients_kernel(
     const long data_size
 )
 {
-    long i = get_global_id(0); // getting the cycle index
-    if(i>=data_size)return; // checking for out of bounds of array
+    long i = get_global_id(0);
+    if(i>=data_size)return;
 
     neurons[i].gradient=value;
 
