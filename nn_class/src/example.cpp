@@ -11,6 +11,7 @@
 #include <optimizers/SGD_optimizer.hpp>
 #include <activations/LeakyReLU_activation.hpp>
 #include <activations/Sigmoid_activation.hpp>
+#include <activations/Softmax_activation.hpp>
 #include <losses/LogLoss.hpp>
 
 int convert_int (int i)
@@ -115,16 +116,17 @@ int main()
     output=convert_output(output);
 
     //creating nn params
-    SGD_optimizer opt(16,0.0005,1.05,0,1e-7);
+    SGD_optimizer opt(16,0.0001,1.05,0,1e-7);
     LogLoss loss;
     LeakyReLU_activation l_relu;
+    Softmax_activation softmax;
     Sigmoid_activation sigmoid;
 
     //creating nn layers
     Convolutional_layer input_lay(&l_relu,28,28,1,32);//32 conv. kernels
     Image_resize_layer irl(26,26,26,26,32,1);//add frame with size 1 pix to output image
     Dense_layer hide_lay(&l_relu,irl.get_layer_res_size(),128,-2);// input size - from irl output size, 128 neurons
-    Dense_layer out_lay(&sigmoid,128,10,-2);// input size - 128, output - 10
+    Dense_layer out_lay(&softmax,128,10,-2);// input size - 128, output - 10
 
 
     NN nn(&opt,&loss);//create nn with nn params
