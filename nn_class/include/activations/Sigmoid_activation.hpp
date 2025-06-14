@@ -16,7 +16,7 @@ public:
         km.add_kernel("multiply_ng_by_activation_derivative", "sigmoid_activation_multiply_ngbad_kernel");
     }
 
-    void activate(float *layer_res, const nn_size_type &neuron_count) override
+    void activate(float *layer_res, nn_size_type neuron_count) override
     {
         for(int i=0; i<neuron_count; i++)
         {
@@ -29,7 +29,7 @@ public:
     }
 
 
-    void multiply_neuron_gradient_by_activation_derivative(neuron *neurons, float *layer_res, const nn_size_type &neuron_count) override
+    void multiply_neuron_gradient_by_activation_derivative(neuron *neurons, float *layer_res, nn_size_type neuron_count) override
     {
         for(int i=0; i<neuron_count; i++)
         {

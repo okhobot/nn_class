@@ -15,11 +15,11 @@ __kernel void imres_lay_resize_in_neurons_kernel(
     const long old_x_size
 )
 {
-    long channel = get_global_id(0); // getting the cycle index
+    long channel = get_global_id(0);
     long i = get_global_id(1);
     long j = get_global_id(2);
 
-    if(channel>=channels_count)return; // checking for out of bounds of array
+    if(channel>=channels_count)return;
     if(i>=old_y_size)return;
     if(j>=old_x_size)return;
 

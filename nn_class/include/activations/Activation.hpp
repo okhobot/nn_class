@@ -5,7 +5,7 @@
 class Activation
 {
 protected:
-    OCLW *oclw;
+    OCLW *oclw=0;
     Kernels_manager km;
 
 public:
@@ -16,7 +16,7 @@ public:
         km.add_kernel("multiply_ng_by_activation_derivative", "activation_multiply_ngbad_kernel");
     }
 
-    void set_oclw(OCLW *a_oclw)
+    virtual void set_oclw(OCLW *a_oclw)
     {
         oclw=a_oclw;
     }
@@ -27,12 +27,12 @@ public:
         return km.get_kernels_paths();
     }
 
-    virtual void activate(float *layer_res, const nn_size_type &data_size) {}
+    virtual void activate(float *layer_res, nn_size_type data_size) {}
 
-    virtual void multiply_neuron_gradient_by_activation_derivative(neuron *neurons, float *layer_res, const nn_size_type &neuron_count) {}// for neurons gradients calculation
+    virtual void multiply_neuron_gradient_by_activation_derivative(neuron *neurons, float *layer_res,  nn_size_type neuron_count) {}// for neurons gradients calculation
 
 
-    virtual void activate_oclw(std::string layer_res_key, const nn_size_type &data_size);
+    virtual void activate_oclw(std::string layer_res_key, nn_size_type data_size);
 
-    virtual void multiply_neuron_gradient_by_activation_derivative_oclw(std::string neurons_key,std::string layer_res, const nn_size_type &neuron_count);
+    virtual void multiply_neuron_gradient_by_activation_derivative_oclw(std::string neurons_key,std::string layer_res_key, nn_size_type neuron_count);
 };

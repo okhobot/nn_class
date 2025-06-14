@@ -20,11 +20,11 @@ __kernel void conv_lay_calculate_gradients_with_ng_kernel(
     const long nx_size
 )
 {
-    long channel = get_global_id(0); // getting the cycle index
+    long channel = get_global_id(0);
     long j = get_global_id(1);
     long k = get_global_id(2);
 
-    if(channel>=channels_count)return; // checking for out of bounds of array
+    if(channel>=channels_count)return;
     if(j>ny_size)return;
     if(k>nx_size)return;
 

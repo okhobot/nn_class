@@ -20,7 +20,7 @@ public:
         km.add_kernel("multiply_ng_by_activation_derivative", "leaky_relu_activation_multiply_ngbad_kernel");
     }
 
-    void activate(float *layer_res, const nn_size_type &neuron_count)override
+    void activate(float *layer_res, nn_size_type neuron_count)override
     {
         for(int i=0; i<neuron_count; i++)
         {
@@ -29,7 +29,7 @@ public:
     }
 
 
-    void multiply_neuron_gradient_by_activation_derivative(neuron *neurons, float *layer_res, const nn_size_type &neuron_count) override
+    void multiply_neuron_gradient_by_activation_derivative(neuron *neurons, float *layer_res, nn_size_type neuron_count) override
     {
         for(int i=0; i<neuron_count; i++)
         {
@@ -37,14 +37,14 @@ public:
         }
     }
 
-    void activate_oclw(std::string layer_res_key, const nn_size_type &neuron_count)override
+    void activate_oclw(std::string layer_res_key, nn_size_type neuron_count)override
     {
         oclw->process_oclw(km.get("activate"), {layer_res_key}, {coef}, {neuron_count},neuron_count);
     }
 
 
-    void multiply_neuron_gradient_by_activation_derivative_oclw(std::string neurons_key,std::string layer_res, const nn_size_type &neuron_count)override
+    void multiply_neuron_gradient_by_activation_derivative_oclw(std::string neurons_key,std::string layer_res_key, nn_size_type neuron_count)override
     {
-        oclw->process_oclw(km.get("multiply_ng_by_activation_derivative"), {neurons_key,layer_res}, {coef}, {neuron_count},neuron_count);
+        oclw->process_oclw(km.get("multiply_ng_by_activation_derivative"), {neurons_key,layer_res_key}, {coef}, {neuron_count},neuron_count);
     }
 };

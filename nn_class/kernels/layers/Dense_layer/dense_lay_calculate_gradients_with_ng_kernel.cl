@@ -9,7 +9,7 @@ __kernel void dense_lay_calculate_gradients_with_ng_kernel(
 {
     long i = get_global_id(0); // getting the neuron index
     long inp_i=get_global_id(1);
-    if(i>=neurons_count)return; // checking for out of bounds of array
+    if(i>=neurons_count)return;
     if(inp_i>=params_count)return;
 
 
