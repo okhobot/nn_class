@@ -16,14 +16,14 @@ protected:
 
 
 public:
-    Image_resize_layer(int a_old_x_size, int a_old_y_size, int a_new_x_size, int a_new_y_size, int a_channels_count=1, int a_frame_size=0, Layer *a_next_layer=0);
+    Image_resize_layer(int a_old_x_size, int a_old_y_size, int a_new_x_size, int a_new_y_size, int a_channels_count=1, int a_frame_size=0, Layer *a_next_layer_ptr=0);
     // a_old_x_size, a_old_y_size - image start dimensions
     // a_new_x_size, a_new_y_size - image out dimensions
     // a_channels_count - channels_count; for rgb channels_count=3
     // a_frame_size - the number of pixels that will be filled with 0 on each side of the image
-    // a_next_layer - next layer ptr; if (a_next_layer==0) it set when init calls
+    // a_next_layer - next layer ptr; if (a_next_layer_ptr=0) it set when init calls
 
-    void init(int a_layer_index, OCLW *a_oclw) override;
+    void init(int a_layer_index, OCLW *a_oclw_ptr) override;
 
     std::vector<float> predict(std::vector<float> &input)override;
     std::string predict_oclw(const std::string &input_key)override;

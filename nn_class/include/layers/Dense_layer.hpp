@@ -14,14 +14,14 @@ protected:
 
 public:
     Dense_layer() {};
-    Dense_layer(Activation *a_activation, int a_data_size, int a_neurons_count, float a_weights_dispersion=-1,float a_weights_center=0, Layer *a_next_layer=0);
+    Dense_layer(Activation *a_activation, int a_data_size, int a_neurons_count, float a_weights_dispersion=-1,float a_weights_center=0, Layer *a_next_layer_ptr=0);
     // a_activation - layer activation
     // a_data_size - input size
     // a_neurons_count - out size
     // a_weights_center - center of weights_dispersion
-    // a_next_layer - next layer ptr; if (a_next_layer==0) it set when init calls
+    // a_next_layer - next layer ptr; if (a_next_layer_ptr=0) it set when init calls
 
-    void init(int a_layer_index, OCLW *a_oclw)override;
+    void init(int a_layer_index, OCLW *a_oclw_ptr)override;
 
     std::vector<float> predict(std::vector<float> &input)override;
     std::string predict_oclw(const std::string &input_key)override;//returns layer_res_key

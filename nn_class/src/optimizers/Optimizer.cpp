@@ -51,8 +51,8 @@ void Optimizer::update_params(Layer *layer, const nn_size_type &data_index)
 void Optimizer::update_params_oclw(Layer *layer, const nn_size_type &data_index)
 {
 
-    oclw->process_oclw(km.get("update_b_params"), {layer->get_neurons_key()}, {learning_rate,regularization_coef}, {layer->get_neurons_count()},layer->get_neurons_count());
+    oclw_ptr->process_oclw(km.get("update_b_params"), {layer->get_neurons_key()}, {learning_rate,regularization_coef}, {layer->get_neurons_count()},layer->get_neurons_count());
 
-    oclw->process_oclw(km.get("update_w_params"), {layer->get_weights_key(), layer->get_gradients_key()}, {learning_rate,regularization_coef}, {layer->get_params_count()},layer->get_params_count());
+    oclw_ptr->process_oclw(km.get("update_w_params"), {layer->get_weights_key(), layer->get_gradients_key()}, {learning_rate,regularization_coef}, {layer->get_params_count()},layer->get_params_count());
 
 }

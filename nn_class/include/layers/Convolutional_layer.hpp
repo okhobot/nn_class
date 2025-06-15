@@ -18,7 +18,7 @@ protected:
 public:
     Convolutional_layer(Activation *a_activation,
                         int a_x_size, int a_y_size, int a_channels_count, int a_neurons_count, int a_nx_size=3, int a_ny_size=3, int a_x_step=1, int a_y_step=1,
-                        float a_weights_dispersion=-1,float a_weights_center=0, Layer *a_next_layer=0);
+                        float a_weights_dispersion=-1,float a_weights_center=0, Layer *a_next_layer_ptr=0);
     // a_activation - layer activation
     // a_x_size, a_y_size - input image size
     // a_channels_count - channels_count; for rgb image a_channels_count=3
@@ -26,10 +26,10 @@ public:
     // a_nx_size, a_ny_size - filter size
     // a_x_step, a_y_step - filter steps
     // a_weights_center - center of weights_dispersion
-    // a_next_layer - next layer ptr; if (a_next_layer==0) it set when init calls
+    // a_next_layer - next layer ptr; if (a_next_layer_ptr=0) it set when init calls
 
 
-    void init(int a_layer_index, OCLW *a_oclw) override;
+    void init(int a_layer_index, OCLW *a_oclw_ptr) override;
 
     std::vector<float> predict(std::vector<float> &input) override;
     std::string predict_oclw(const std::string &input_key) override;//returns layer_res_key

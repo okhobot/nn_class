@@ -23,12 +23,12 @@ public:
         tmp_res_key="softmax_activation_tmp_res";
     }
 
-    void set_oclw(OCLW *a_oclw) override
+    void set_oclw(OCLW *a_oclw_ptr) override
     {
-        oclw=a_oclw;
+        oclw_ptr=a_oclw_ptr;
         std::vector<float> tmp_res(2,0);
 
-        oclw->add_and_write_variable(tmp_res_key,CL_READ_WRITE_CACHE,tmp_res.size()*sizeof(float),tmp_res.data());
+        oclw_ptr->add_and_write_variable(tmp_res_key,CL_READ_WRITE_CACHE,tmp_res.size()*sizeof(float),tmp_res.data());
     }
 
 
@@ -74,18 +74,18 @@ public:
 
     void activate_oclw(std::string layer_res_key, nn_size_type neuron_count)override
     {
-        oclw->process_oclw(km.get("max"), {layer_res_key, tmp_res_key}, {}, {0},neuron_count);
+        oclw_ptr->process_oclw(km.get("max"), {layer_res_key, tmp_res_key}, {}, {0},neuron_count);
 
-        oclw->process_oclw(km.get("sum_exp"), {layer_res_key, tmp_res_key}, {}, {0,1},neuron_count);
+        oclw_ptr->process_oclw(km.get("sum_exp"), {layer_res_key, tmp_res_key}, {}, {0,1},neuron_count);
 
-        oclw->process_oclw(km.get("activate"), {layer_res_key,tmp_res_key}, {}, {1, neuron_count},neuron_count);
+        oclw_ptr->process_oclw(km.get("activate"), {layer_res_key,tmp_res_key}, {}, {1, neuron_count},neuron_count);
     }
 
 
     void multiply_neuron_gradient_by_activation_derivative_oclw(std::string neurons_key,std::string layer_res_key, nn_size_type neuron_count)override
     {
-        oclw->process_oclw(km.get("grad_dot_output"), {neurons_key,layer_res_key, tmp_res_key}, {}, {1},neuron_count);
-        oclw->process_oclw(km.get("multiply_ng_by_activation_derivative"), {neurons_key,layer_res_key, tmp_res_key}, {}, {1},neuron_count);
+        oclw_ptr->process_oclw(km.get("grad_dot_output"), {neurons_key,layer_res_key, tmp_res_key}, {}, {1},neuron_count);
+        oclw_ptr->process_oclw(km.get("multiply_ng_by_activation_derivative"), {neurons_key,layer_res_key, tmp_res_key}, {}, {1},neuron_count);
     }
 
 };
