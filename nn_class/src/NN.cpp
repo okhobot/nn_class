@@ -221,10 +221,10 @@ void NN::correct_weights(const std::vector<float> &input, const std::vector<floa
         return;
     }
 
-    layers[0]->calculate_ng_main_lay(loss, layers.size()==1? input.data():layers[1]->get_layer_res(),  output.data());
+    layers[0]->calculate_ng_main_lay(loss, layers.size()==1? input.data():layers[1]->get_layer_res_ptr(),  output.data());
 
     for(int l_i=1; l_i<layers.size(); l_i++)
-        layers[l_i]->calculate_ng((l_i==layers.size()-1? input.data():layers[l_i+1]->get_layer_res()));
+        layers[l_i]->calculate_ng((l_i==layers.size()-1? input.data():layers[l_i+1]->get_layer_res_ptr()));
 
     for(int l_i=0; l_i<layers.size(); l_i++)
         optimizer->update_params(layers[l_i],-1);
@@ -343,10 +343,10 @@ void NN::train(std::vector<std::vector<float>> input, std::vector<std::vector<fl
             predict(input[indexes[i]]);
 
 
-            layers[0]->calculate_ng_main_lay(loss, layers.size()==1?input[indexes[i]].data():layers[1]->get_layer_res(), output[indexes[i]].data());
+            layers[0]->calculate_ng_main_lay(loss, layers.size()==1?input[indexes[i]].data():layers[1]->get_layer_res_ptr(), output[indexes[i]].data());
 
             for(int l_i=1; l_i<layers.size(); l_i++)
-                layers[l_i]->calculate_ng((l_i==layers.size()-1? input[indexes[i]].data():layers[l_i+1]->get_layer_res()));
+                layers[l_i]->calculate_ng((l_i==layers.size()-1? input[indexes[i]].data():layers[l_i+1]->get_layer_res_ptr()));
 
 
             for(int l_i=0; l_i<layers.size(); l_i++)

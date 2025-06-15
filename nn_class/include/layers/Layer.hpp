@@ -103,7 +103,7 @@ public:
     }
 
 
-    virtual float* get_layer_res()
+    virtual float* get_layer_res_ptr()
     {
         return layer_res.data();
     }
