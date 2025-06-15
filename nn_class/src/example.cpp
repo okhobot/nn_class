@@ -142,7 +142,7 @@ int main()
 
     nn.set_logs_output(&std::cout);//set logs output to console
 
-    nn.init(0);//init nn
+    nn.init();//init nn
     //you can set oclw mode(parallel computing mode), if you set oclw device index
 
 
