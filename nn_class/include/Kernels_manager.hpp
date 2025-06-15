@@ -13,25 +13,25 @@ class Kernels_manager
 
 public:
 
-    void set_default_path(std::string a_default_path)// set path to kernels
+    inline void set_default_path(std::string a_default_path)// set path to kernels
     {
         default_path=a_default_path;
     }
 
-    void add_kernel(std::string name,std::string value, std::string path="none")// add kernel to dict
+    inline void add_kernel(std::string name,std::string value, std::string path="none")// add kernel to dict
     {
         if(path=="none")path=default_path;
         kernels[name]=value;
         kernels["path_"+name]=path+value;
     }
 
-    void delete_kernel(std::string name)// delete kernel from dict
+    inline void delete_kernel(std::string name)// delete kernel from dict
     {
         kernels.erase(name);
         kernels.erase("path_"+name);
     }
 
-    std::vector<std::string> get_kernels_paths()
+    inline std::vector<std::string> get_kernels_paths()
     {
         std::vector<std::string> res;
         for(std::map<std::string, std::string>::iterator it = kernels.begin(); it != kernels.end(); ++it)
@@ -45,6 +45,11 @@ public:
     {
         if(kernels[name]=="")debug_utils::call_error(1,"Kernel_manager::get","no_kernel_with_such_key",name);
         return kernels[name];
+    }
+
+    inline bool have(const std::string &name)// get kernel name by variable name
+    {
+        return kernels.find(name) != kernels.end();
     }
 
     inline std::string get_path(const std::string &name)// get kernel path by variable name

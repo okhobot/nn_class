@@ -48,6 +48,8 @@ void Layer::generate_weights(float dispersion, float center)
 
 void Layer::generate_kernels(Loss *loss)
 {
+    if(!km.have("calculate_ng_main_lay"))return;
+
     std::string new_kernel_name=km.get("calculate_ng_main_lay").substr(0,km.get("calculate_ng_main_lay").size()-4);
     std::string new_path="kernels/generated/"+new_kernel_name;
 
