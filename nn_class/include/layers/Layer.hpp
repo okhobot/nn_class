@@ -47,6 +47,8 @@ public:
 
     virtual void init(int a_layer_index, OCLW *a_oclw)
     {
+        layer_index=a_layer_index;
+        oclw=a_oclw;
         inited=true;
     };
 
