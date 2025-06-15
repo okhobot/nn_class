@@ -35,12 +35,43 @@ Convolutional_layer::Convolutional_layer(Activation *a_activation, int a_x_size,
 
 }
 
+void Convolutional_layer::init_kernels()
+{
+    km.set_default_path("kernels/layers/Convolutional_layer/");
+
+    km.add_kernel("predict","conv_lay_predict_kernel");
+    km.add_kernel("calculate_gradients_with_ng","conv_lay_calculate_gradients_with_ng_kernel");
+    km.add_kernel("calculate_ng_main_lay","conv_lay_calculate_ng_with_loss_func_kernel_tmp");
+    km.add_kernel("calculate_previous_ng","conv_lay_calculate_previous_ng_kernel");
+    km.add_kernel("calculate_previous_ng_in_neurons","conv_lay_calculate_previous_ng_in_neurons_kernel");
+
+    km.add_kernel("convert_to_neurons","conv_lay_convert_to_neurons_kernel");
+}
+void Convolutional_layer::init_oclw_variables()
+{
+    weights_key="l_"+std::to_string(layer_index)+"_weights";
+    gradients_key="l_"+std::to_string(layer_index)+"_gradients";
+    neurons_key="l_"+std::to_string(layer_index)+"_neurons";
+    layer_res_key="l_"+std::to_string(layer_index)+"_layer_res";
+    converted_ng_key="l_"+std::to_string(layer_index)+"_converted_ng";
+    converted_layer_res_key="l_"+std::to_string(layer_index)+"_converted_layer_res";
+
+    oclw_ptr->add_and_write_variable(weights_key,CL_READ_WRITE_CACHE,weights.size()*sizeof(nn_type),weights.data());
+    oclw_ptr->add_variable(gradients_key,CL_READ_WRITE_CACHE,params_count*sizeof(nn_type));
+
+    oclw_ptr->add_and_write_variable(neurons_key,CL_READ_WRITE_CACHE,neurons.size()*sizeof(neuron),neurons.data());
+    oclw_ptr->add_variable(layer_res_key,CL_READ_WRITE_CACHE,out_size*sizeof(float));
+
+    oclw_ptr->add_variable(converted_ng_key,CL_READ_WRITE_CACHE,out_size*sizeof(float));
+    oclw_ptr->add_variable(converted_layer_res_key,CL_READ_WRITE_CACHE,neurons_count*sizeof(float));
+}
+
 void Convolutional_layer::init(int a_layer_index, OCLW *a_oclw_ptr)
 {
     layer_index=a_layer_index;
     oclw_ptr=a_oclw_ptr;
     activation_ptr->set_oclw(oclw_ptr);
-
+    inited=true;
 
     neurons.resize(neurons_count);
 
@@ -49,32 +80,11 @@ void Convolutional_layer::init(int a_layer_index, OCLW *a_oclw_ptr)
     if(oclw_ptr->is_inited())
     {
 
-        km.set_default_path("kernels/layers/Convolutional_layer/");
 
-        km.add_kernel("predict","conv_lay_predict_kernel");
-        km.add_kernel("calculate_gradients_with_ng","conv_lay_calculate_gradients_with_ng_kernel");
-        km.add_kernel("calculate_ng_main_lay","conv_lay_calculate_ng_with_loss_func_kernel_tmp");
-        km.add_kernel("calculate_previous_ng","conv_lay_calculate_previous_ng_kernel");
-        km.add_kernel("calculate_previous_ng_in_neurons","conv_lay_calculate_previous_ng_in_neurons_kernel");
-
-        km.add_kernel("convert_to_neurons","conv_lay_convert_to_neurons_kernel");
+        init_kernels();
+        init_oclw_variables();
 
 
-        weights_key="l_"+std::to_string(layer_index)+"_weights";
-        gradients_key="l_"+std::to_string(layer_index)+"_gradients";
-        neurons_key="l_"+std::to_string(layer_index)+"_neurons";
-        layer_res_key="l_"+std::to_string(layer_index)+"_layer_res";
-        converted_ng_key="l_"+std::to_string(layer_index)+"_converted_ng";
-        converted_layer_res_key="l_"+std::to_string(layer_index)+"_converted_layer_res";
-
-        oclw_ptr->add_and_write_variable(weights_key,CL_READ_WRITE_CACHE,weights.size()*sizeof(nn_type),weights.data());
-        oclw_ptr->add_variable(gradients_key,CL_READ_WRITE_CACHE,params_count*sizeof(nn_type));
-
-        oclw_ptr->add_and_write_variable(neurons_key,CL_READ_WRITE_CACHE,neurons.size()*sizeof(neuron),neurons.data());
-        oclw_ptr->add_variable(layer_res_key,CL_READ_WRITE_CACHE,out_size*sizeof(float));
-
-        oclw_ptr->add_variable(converted_ng_key,CL_READ_WRITE_CACHE,out_size*sizeof(float));
-        oclw_ptr->add_variable(converted_layer_res_key,CL_READ_WRITE_CACHE,neurons_count*sizeof(float));
 
         weights.clear();
         neurons.clear();
@@ -87,7 +97,6 @@ void Convolutional_layer::init(int a_layer_index, OCLW *a_oclw_ptr)
         gradients.resize(params_count,0);
     }
 
-    inited=true;
 }
 
 std::vector<float> Convolutional_layer::predict(std::vector<float> &input)

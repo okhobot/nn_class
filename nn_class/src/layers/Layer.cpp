@@ -59,6 +59,48 @@ void Layer::generate_kernels(Loss *loss)
 }
 
 
+void Layer::init_oclw_variables()
+{
+    weights_key="l_"+std::to_string(layer_index)+"_weights";
+    gradients_key="l_"+std::to_string(layer_index)+"_gradients";
+    neurons_key="l_"+std::to_string(layer_index)+"_neurons";
+    layer_res_key="l_"+std::to_string(layer_index)+"_layer_res";
+
+    oclw_ptr->add_and_write_variable(weights_key,CL_READ_WRITE_CACHE,weights.size()*sizeof(nn_type),weights.data());
+    oclw_ptr->add_variable(gradients_key,CL_READ_WRITE_CACHE,params_count*sizeof(nn_type));
+
+    oclw_ptr->add_and_write_variable(neurons_key,CL_READ_WRITE_CACHE,neurons.size()*sizeof(neuron),neurons.data());
+    oclw_ptr->add_variable(layer_res_key,CL_READ_WRITE_CACHE,neurons_count*sizeof(float));
+}
+
+void Layer::init(int a_layer_index, OCLW *a_oclw_ptr)
+{
+    layer_index=a_layer_index;
+    oclw_ptr=a_oclw_ptr;
+    inited=true;
+
+    if(activation_ptr!=0)
+        activation_ptr->set_oclw(oclw_ptr);
+
+    neurons.resize(neurons_count);
+
+    generate_weights(weights_dispersion,weights_center);
+
+    if(oclw_ptr->is_inited())
+    {
+        init_kernels();
+
+        init_oclw_variables();
+
+        weights.clear();
+        neurons.clear();
+    }
+    else
+    {
+        layer_res.resize(neurons_count);
+        gradients.resize(params_count,0);
+    }
+};
 
 
 

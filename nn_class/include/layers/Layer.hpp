@@ -45,12 +45,11 @@ protected:
 
 public:
 
-    virtual void init(int a_layer_index, OCLW *a_oclw_ptr)
-    {
-        layer_index=a_layer_index;
-        oclw_ptr=a_oclw_ptr;
-        inited=true;
-    };
+    virtual void init_kernels() {}
+
+    virtual void init_oclw_variables();
+
+    virtual void init(int a_layer_index, OCLW *a_oclw_ptr);
 
     virtual std::vector<float> predict(std::vector<float> &input)
     {

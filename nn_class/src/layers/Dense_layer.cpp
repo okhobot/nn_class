@@ -18,51 +18,15 @@ Dense_layer::Dense_layer(Activation *a_activation, int a_data_size, int a_neuron
 }
 
 
-void Dense_layer::init(int a_layer_index, OCLW *a_oclw_ptr)
+void Dense_layer::init_kernels()
 {
-    layer_index=a_layer_index;
-    oclw_ptr=a_oclw_ptr;
-    activation_ptr->set_oclw(oclw_ptr);
+    km.set_default_path("kernels/layers/Dense_layer/");
 
-
-    neurons.resize(neurons_count);
-
-
-
-    generate_weights(weights_dispersion,weights_center);
-
-    if(oclw_ptr->is_inited())
-    {
-        km.set_default_path("kernels/layers/Dense_layer/");
-
-        km.add_kernel("predict","dense_lay_predict_kernel");
-        km.add_kernel("calculate_gradients_with_ng","dense_lay_calculate_gradients_with_ng_kernel");
-        km.add_kernel("calculate_ng_main_lay","dense_lay_calculate_ng_with_loss_func_kernel_tmp");
-        km.add_kernel("calculate_previous_ng","dense_lay_calculate_previous_ng_kernel");
-        km.add_kernel("calculate_previous_ng_in_neurons","dense_lay_calculate_previous_ng_in_neurons_kernel");
-
-
-        weights_key="l_"+std::to_string(layer_index)+"_weights";
-        gradients_key="l_"+std::to_string(layer_index)+"_gradients";
-        neurons_key="l_"+std::to_string(layer_index)+"_neurons";
-        layer_res_key="l_"+std::to_string(layer_index)+"_layer_res";
-
-        oclw_ptr->add_and_write_variable(weights_key,CL_READ_WRITE_CACHE,weights.size()*sizeof(nn_type),weights.data());
-        oclw_ptr->add_variable(gradients_key,CL_READ_WRITE_CACHE,params_count*sizeof(nn_type));
-
-        oclw_ptr->add_and_write_variable(neurons_key,CL_READ_WRITE_CACHE,neurons.size()*sizeof(neuron),neurons.data());
-        oclw_ptr->add_variable(layer_res_key,CL_READ_WRITE_CACHE,neurons_count*sizeof(float));
-
-        weights.clear();
-        neurons.clear();
-    }
-    else
-    {
-        layer_res.resize(neurons_count);
-        gradients.resize(params_count,0);
-    }
-
-    inited=true;
+    km.add_kernel("predict","dense_lay_predict_kernel");
+    km.add_kernel("calculate_gradients_with_ng","dense_lay_calculate_gradients_with_ng_kernel");
+    km.add_kernel("calculate_ng_main_lay","dense_lay_calculate_ng_with_loss_func_kernel_tmp");
+    km.add_kernel("calculate_previous_ng","dense_lay_calculate_previous_ng_kernel");
+    km.add_kernel("calculate_previous_ng_in_neurons","dense_lay_calculate_previous_ng_in_neurons_kernel");
 }
 
 
