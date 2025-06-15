@@ -62,39 +62,46 @@ Image_resize_layer::Image_resize_layer(int a_old_x_size, int a_old_y_size, int a
     //std::cout<<inversed_data_normalization_coef<<" "<<1/resize_coef_x<<" "<<1/resize_coef_y<<std::endl;
 }
 
+void Image_resize_layer::init_kernels()
+{
+    km.set_default_path("kernels/layers/Image_resize_layer/");
 
+    km.add_kernel("fill_floats","fill_float_arr_kernel");
+    km.add_kernel("fill_ng","fill_neurons_gradients_kernel");
+    km.add_kernel("resize","imres_lay_resize_kernel");
+    km.add_kernel("resize_in_neurons","imres_lay_resize_in_neurons_kernel");
+
+    km.add_kernel("calculate_ng_main_lay","imres_lay_calculate_ng_with_loss_func_kernel_tmp");
+}
+void Image_resize_layer::init_oclw_variables()
+{
+    weights_key=oclw_null;
+    gradients_key=oclw_null;
+    neurons_key=oclw_null;
+
+
+    layer_res_key="l_"+std::to_string(layer_index)+"_layer_res";
+    next_gradients_key="l_"+std::to_string(layer_index)+"_next_gradients";
+
+
+    oclw_ptr->add_variable(layer_res_key,CL_READ_WRITE_CACHE,out_size*sizeof(float));
+    oclw_ptr->add_variable(next_gradients_key,CL_READ_WRITE_CACHE,out_size*sizeof(float));
+}
 void Image_resize_layer::init(int a_layer_index, OCLW *a_oclw_ptr)
 {
     layer_index=a_layer_index;
     oclw_ptr=a_oclw_ptr;
-
+    inited=true;
 
 
     generate_weights(weights_dispersion,weights_center);
 
     if(oclw_ptr->is_inited())
     {
-        km.set_default_path("kernels/layers/Image_resize_layer/");
 
-        km.add_kernel("fill_floats","fill_float_arr_kernel");
-        km.add_kernel("fill_ng","fill_neurons_gradients_kernel");
-        km.add_kernel("resize","imres_lay_resize_kernel");
-        km.add_kernel("resize_in_neurons","imres_lay_resize_in_neurons_kernel");
+        init_kernels();
+        init_oclw_variables();
 
-        km.add_kernel("calculate_ng_main_lay","imres_lay_calculate_ng_with_loss_func_kernel_tmp");
-
-
-        weights_key=oclw_null;
-        gradients_key=oclw_null;
-        neurons_key=oclw_null;
-
-
-        layer_res_key="l_"+std::to_string(layer_index)+"_layer_res";
-        next_gradients_key="l_"+std::to_string(layer_index)+"_next_gradients";
-
-
-        oclw_ptr->add_variable(layer_res_key,CL_READ_WRITE_CACHE,out_size*sizeof(float));
-        oclw_ptr->add_variable(next_gradients_key,CL_READ_WRITE_CACHE,out_size*sizeof(float));
 
     }
     else
@@ -105,7 +112,6 @@ void Image_resize_layer::init(int a_layer_index, OCLW *a_oclw_ptr)
         if(layer_index==0)neurons.resize(1);
     }
 
-    inited=true;
 }
 
 

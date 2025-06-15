@@ -21,7 +21,8 @@ public:
     // a_weights_center - center of weights_dispersion
     // a_next_layer - next layer ptr; if (a_next_layer_ptr=0) it set when init calls
 
-    void init(int a_layer_index, OCLW *a_oclw_ptr)override;
+    void init_kernels() override;
+
 
     std::vector<float> predict(std::vector<float> &input)override;
     std::string predict_oclw(const std::string &input_key)override;//returns layer_res_key

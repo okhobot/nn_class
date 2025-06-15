@@ -30,6 +30,8 @@ public:
 
 
     void init(int a_layer_index, OCLW *a_oclw_ptr) override;
+    void init_kernels() override;
+    void init_oclw_variables() override;
 
     std::vector<float> predict(std::vector<float> &input) override;
     std::string predict_oclw(const std::string &input_key) override;//returns layer_res_key
