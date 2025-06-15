@@ -2,7 +2,7 @@
 
 Convolutional_layer::Convolutional_layer(Activation *a_activation, int a_x_size, int a_y_size, int a_channels_count, int a_neurons_count, int a_nx_size, int a_ny_size, int a_x_step, int a_y_step, float a_weights_dispersion,float a_weights_center, Layer *a_next_layer)
 {
-    next_layer=a_next_layer;
+    next_layer_ptr=a_next_layer;
 
     nx_size=a_nx_size;
     ny_size=a_ny_size;
@@ -19,7 +19,7 @@ Convolutional_layer::Convolutional_layer(Activation *a_activation, int a_x_size,
     input_size=channels_count*x_size*y_size;
     data_size=nx_size*ny_size*channels_count;
     neurons_count=a_neurons_count;
-    activation=a_activation;
+    activation_ptr=a_activation;
 
     out_size=neurons_count*((x_size-nx_size)/x_step+1)*((y_size-ny_size)/y_step+1);
     neuron_out_size=out_size/neurons_count;
@@ -35,18 +35,18 @@ Convolutional_layer::Convolutional_layer(Activation *a_activation, int a_x_size,
 
 }
 
-void Convolutional_layer::init(int a_layer_index, OCLW *a_oclw)
+void Convolutional_layer::init(int a_layer_index, OCLW *a_oclw_ptr)
 {
     layer_index=a_layer_index;
-    oclw=a_oclw;
-    activation->set_oclw(oclw);
+    oclw_ptr=a_oclw_ptr;
+    activation_ptr->set_oclw(oclw_ptr);
 
 
     neurons.resize(neurons_count);
 
     generate_weights(weights_dispersion,weights_center);
 
-    if(oclw->is_inited())
+    if(oclw_ptr->is_inited())
     {
 
         km.set_default_path("kernels/layers/Convolutional_layer/");
@@ -67,14 +67,14 @@ void Convolutional_layer::init(int a_layer_index, OCLW *a_oclw)
         converted_ng_key="l_"+std::to_string(layer_index)+"_converted_ng";
         converted_layer_res_key="l_"+std::to_string(layer_index)+"_converted_layer_res";
 
-        oclw->add_and_write_variable(weights_key,CL_READ_WRITE_CACHE,weights.size()*sizeof(nn_type),weights.data());
-        oclw->add_variable(gradients_key,CL_READ_WRITE_CACHE,params_count*sizeof(nn_type));
+        oclw_ptr->add_and_write_variable(weights_key,CL_READ_WRITE_CACHE,weights.size()*sizeof(nn_type),weights.data());
+        oclw_ptr->add_variable(gradients_key,CL_READ_WRITE_CACHE,params_count*sizeof(nn_type));
 
-        oclw->add_and_write_variable(neurons_key,CL_READ_WRITE_CACHE,neurons.size()*sizeof(neuron),neurons.data());
-        oclw->add_variable(layer_res_key,CL_READ_WRITE_CACHE,out_size*sizeof(float));
+        oclw_ptr->add_and_write_variable(neurons_key,CL_READ_WRITE_CACHE,neurons.size()*sizeof(neuron),neurons.data());
+        oclw_ptr->add_variable(layer_res_key,CL_READ_WRITE_CACHE,out_size*sizeof(float));
 
-        oclw->add_variable(converted_ng_key,CL_READ_WRITE_CACHE,out_size*sizeof(float));
-        oclw->add_variable(converted_layer_res_key,CL_READ_WRITE_CACHE,neurons_count*sizeof(float));
+        oclw_ptr->add_variable(converted_ng_key,CL_READ_WRITE_CACHE,out_size*sizeof(float));
+        oclw_ptr->add_variable(converted_layer_res_key,CL_READ_WRITE_CACHE,neurons_count*sizeof(float));
 
         weights.clear();
         neurons.clear();
@@ -113,7 +113,7 @@ std::vector<float> Convolutional_layer::predict(std::vector<float> &input)
             }
 
 
-    activation->activate(layer_res.data(),layer_res.size());
+    activation_ptr->activate(layer_res.data(),layer_res.size());
 
     //for(int i=0;i<layer_res.size();i++)std::cout<<layer_res[i]<<" ";
     //std::cout<<" li:"<<layer_index<<std::endl;
@@ -123,11 +123,11 @@ std::vector<float> Convolutional_layer::predict(std::vector<float> &input)
 
 std::string Convolutional_layer::predict_oclw(const std::string &input_key)
 {
-    oclw->process_oclw(km.get("predict"), {neurons_key,input_key,layer_res_key,weights_key}, {},
+    oclw_ptr->process_oclw(km.get("predict"), {neurons_key,input_key,layer_res_key,weights_key}, {},
     {channels_count, nx_size,ny_size, lay_res_x_size,lay_res_y_size,x_step,y_step,  neurons_count, y_size, x_size},neurons_count, y_size/y_step, x_size/x_step);
 
 
-    activation->activate_oclw(layer_res_key,out_size);
+    activation_ptr->activate_oclw(layer_res_key,out_size);
     return layer_res_key;
 }
 
@@ -151,9 +151,9 @@ void Convolutional_layer::calculate_gradients_with_ng(const float *input)
 }
 void Convolutional_layer::calculate_gradients_with_ng_oclw(const std::string &input_key)
 {
-    //oclw->process_oclw(km.get("calculate_gradients_with_ng"), {neurons_key,input_key,gradients_key}, {}, {neurons_count, data_size},neurons_count,data_size);
+    //oclw_ptr->process_oclw(km.get("calculate_gradients_with_ng"), {neurons_key,input_key,gradients_key}, {}, {neurons_count, data_size},neurons_count,data_size);
 
-    oclw->process_oclw(km.get("calculate_gradients_with_ng"), {neurons_key,input_key,gradients_key}, {},
+    oclw_ptr->process_oclw(km.get("calculate_gradients_with_ng"), {neurons_key,input_key,gradients_key}, {},
     {neurons_count, x_size, y_size, lay_res_x_size,lay_res_y_size,x_step,y_step,  channels_count, ny_size,nx_size},channels_count, ny_size, nx_size);
 }
 
@@ -174,7 +174,7 @@ void Convolutional_layer::calculate_ng_main_lay(Loss *loss, const float *input, 
 
     }
 
-    activation->multiply_neuron_gradient_by_activation_derivative(neurons.data(), converted_layer_res.data(),neurons_count);
+    activation_ptr->multiply_neuron_gradient_by_activation_derivative(neurons.data(), converted_layer_res.data(),neurons_count);
 
     calculate_gradients_with_ng(input);
 }
@@ -182,9 +182,9 @@ void Convolutional_layer::calculate_ng_main_lay(Loss *loss, const float *input, 
 
 void Convolutional_layer::calculate_ng_main_lay_oclw(const std::string &input_key, const std::string &output_key)
 {
-    oclw->process_oclw(km.get("calculate_ng_main_lay"), {neurons_key,output_key,layer_res_key, converted_layer_res_key}, {}, {neuron_out_size,neurons_count},neurons_count);
+    oclw_ptr->process_oclw(km.get("calculate_ng_main_lay"), {neurons_key,output_key,layer_res_key, converted_layer_res_key}, {}, {neuron_out_size,neurons_count},neurons_count);
 
-    activation->multiply_neuron_gradient_by_activation_derivative_oclw(neurons_key,converted_layer_res_key,neurons_count);
+    activation_ptr->multiply_neuron_gradient_by_activation_derivative_oclw(neurons_key,converted_layer_res_key,neurons_count);
 
     calculate_gradients_with_ng_oclw(input_key);
 }
@@ -192,7 +192,7 @@ void Convolutional_layer::calculate_ng_main_lay_oclw(const std::string &input_ke
 
 void Convolutional_layer::calculate_ng(const float *input)
 {
-    next_layer->calculate_previous_ng(converted_ng);
+    next_layer_ptr->calculate_previous_ng(converted_ng);
 
 
 
@@ -211,7 +211,7 @@ void Convolutional_layer::calculate_ng(const float *input)
     }
 
 
-    activation->multiply_neuron_gradient_by_activation_derivative(neurons.data(), converted_layer_res.data(),neurons_count);
+    activation_ptr->multiply_neuron_gradient_by_activation_derivative(neurons.data(), converted_layer_res.data(),neurons_count);
 
 
     calculate_gradients_with_ng(input);
@@ -220,11 +220,11 @@ void Convolutional_layer::calculate_ng(const float *input)
 void Convolutional_layer::calculate_ng_oclw(const std::string &input_key)
 {
 
-    next_layer->calculate_previous_ng_oclw(converted_ng_key,out_size);
+    next_layer_ptr->calculate_previous_ng_oclw(converted_ng_key,out_size);
 
-    oclw->process_oclw(km.get("convert_to_neurons"), {neurons_key, converted_ng_key, layer_res_key, converted_layer_res_key}, {}, {neuron_out_size, neurons_count},neurons_count);
+    oclw_ptr->process_oclw(km.get("convert_to_neurons"), {neurons_key, converted_ng_key, layer_res_key, converted_layer_res_key}, {}, {neuron_out_size, neurons_count},neurons_count);
 
-    activation->multiply_neuron_gradient_by_activation_derivative_oclw(neurons_key,converted_layer_res_key,neurons_count);
+    activation_ptr->multiply_neuron_gradient_by_activation_derivative_oclw(neurons_key,converted_layer_res_key,neurons_count);
 
 
     calculate_gradients_with_ng_oclw(input_key);
@@ -253,7 +253,7 @@ void Convolutional_layer::calculate_previous_ng_in_neurons(std::vector<neuron> &
 }
 void Convolutional_layer::calculate_previous_ng_in_neurons_oclw(const std::string &previous_neurons_key, size_t previous_neurons_size)
 {
-    oclw->process_oclw(km.get("calculate_previous_ng_in_neurons"), {previous_neurons_key,neurons_key,weights_key}, {}, {neurons_count,nx_size,ny_size,x_size,y_size, previous_neurons_size},previous_neurons_size);
+    oclw_ptr->process_oclw(km.get("calculate_previous_ng_in_neurons"), {previous_neurons_key,neurons_key,weights_key}, {}, {neurons_count,nx_size,ny_size,x_size,y_size, previous_neurons_size},previous_neurons_size);
 }
 
 void Convolutional_layer::calculate_previous_ng(std::vector<float> &previous_gradients)
@@ -276,7 +276,7 @@ void Convolutional_layer::calculate_previous_ng(std::vector<float> &previous_gra
 }
 void Convolutional_layer::calculate_previous_ng_oclw(const std::string &previous_gradients_key, size_t previous_gradients_size)
 {
-    oclw->process_oclw(km.get("calculate_previous_ng"), {neurons_key,weights_key,previous_gradients_key}, {}, {neurons_count,nx_size,ny_size,x_size,y_size, previous_gradients_size},previous_gradients_size);
+    oclw_ptr->process_oclw(km.get("calculate_previous_ng"), {neurons_key,weights_key,previous_gradients_key}, {}, {neurons_count,nx_size,ny_size,x_size,y_size, previous_gradients_size},previous_gradients_size);
 }
 
 

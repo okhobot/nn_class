@@ -24,9 +24,9 @@ protected:
 
     std::string path_to_kernels;
 
-    Layer *next_layer=0;
-    Activation *activation=0;
-    OCLW *oclw=0;
+    Layer *next_layer_ptr=0;
+    Activation *activation_ptr=0;
+    OCLW *oclw_ptr=0;
 
     float weights_dispersion=0,weights_center=0;
     nn_size_type params_count=0;
@@ -45,10 +45,10 @@ protected:
 
 public:
 
-    virtual void init(int a_layer_index, OCLW *a_oclw)
+    virtual void init(int a_layer_index, OCLW *a_oclw_ptr)
     {
         layer_index=a_layer_index;
-        oclw=a_oclw;
+        oclw_ptr=a_oclw_ptr;
         inited=true;
     };
 
@@ -160,8 +160,8 @@ public:
     ///setters
     virtual void set_next_layer(Layer *a_next_layer, bool forced=false)
     {
-        if(next_layer==0 || forced)
-            next_layer=a_next_layer;
+        if(next_layer_ptr==0 || forced)
+            next_layer_ptr=a_next_layer;
     }
 
     virtual void set_layer_res(const std::vector<float> &res);

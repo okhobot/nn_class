@@ -5,7 +5,7 @@
 class Activation
 {
 protected:
-    OCLW *oclw=0;
+    OCLW *oclw_ptr=0;
     Kernels_manager km;
 
 public:
@@ -16,9 +16,9 @@ public:
         km.add_kernel("multiply_ng_by_activation_derivative", "activation_multiply_ngbad_kernel");
     }
 
-    virtual void set_oclw(OCLW *a_oclw)
+    virtual void set_oclw(OCLW *a_oclw_ptr)
     {
-        oclw=a_oclw;
+        oclw_ptr=a_oclw_ptr;
     }
 
 

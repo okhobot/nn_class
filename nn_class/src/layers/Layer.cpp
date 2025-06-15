@@ -62,10 +62,10 @@ void Layer::generate_kernels(Loss *loss)
 
 void Layer::load(std::ifstream &input)
 {
-    if(oclw->is_inited())
+    if(oclw_ptr->is_inited())
     {
         neurons.resize(neurons_count);
-        oclw->read_variable(neurons_key, neurons.size()*sizeof(neuron),neurons.data());
+        oclw_ptr->read_variable(neurons_key, neurons.size()*sizeof(neuron),neurons.data());
         weights.resize(params_count);
     }
     try
@@ -80,10 +80,10 @@ void Layer::load(std::ifstream &input)
     {
         debug_utils::call_error(0,"Layer::load", "error while loading weights", error_message);
     }
-    if(oclw->is_inited())
+    if(oclw_ptr->is_inited())
     {
-        oclw->write_variable(neurons_key, neurons.size()*sizeof(neuron),neurons.data());
-        oclw->write_variable(weights_key, weights.size()*sizeof(nn_type),weights.data());
+        oclw_ptr->write_variable(neurons_key, neurons.size()*sizeof(neuron),neurons.data());
+        oclw_ptr->write_variable(weights_key, weights.size()*sizeof(nn_type),weights.data());
         neurons.clear();
         weights.clear();
     }
@@ -91,12 +91,12 @@ void Layer::load(std::ifstream &input)
 
 void Layer::save(std::ofstream &output)
 {
-    if(oclw->is_inited())
+    if(oclw_ptr->is_inited())
     {
         weights.resize(params_count);
         neurons.resize(neurons_count);
-        oclw->read_variable(neurons_key, neurons.size()*sizeof(neuron),neurons.data());
-        oclw->read_variable(weights_key, weights.size()*sizeof(nn_type),weights.data());
+        oclw_ptr->read_variable(neurons_key, neurons.size()*sizeof(neuron),neurons.data());
+        oclw_ptr->read_variable(weights_key, weights.size()*sizeof(nn_type),weights.data());
     }
 
     for(size_t i=0; i<params_count; i++)
@@ -114,7 +114,7 @@ std::vector<std::string> Layer::get_kernels_paths()
 {
     std::vector<std::string> tmp, res=km.get_kernels_paths();
 
-    if(activation)tmp=activation->get_kernels_paths();
+    if(activation_ptr)tmp=activation_ptr->get_kernels_paths();
     res.insert(res.end(),tmp.begin(),tmp.end());
     return res;
 }
@@ -130,9 +130,9 @@ void Layer::set_layer_res(const std::vector<float> &res)
     layer_res.resize(get_layer_res_size());
     for(int i=0; i<res.size(); i++)layer_res[i]=res[i];
 
-    if(oclw->is_inited())
+    if(oclw_ptr->is_inited())
     {
-        oclw->write_variable(layer_res_key,layer_res.size()*sizeof(float),layer_res.data());
+        oclw_ptr->write_variable(layer_res_key,layer_res.size()*sizeof(float),layer_res.data());
         layer_res.clear();
     }
 }

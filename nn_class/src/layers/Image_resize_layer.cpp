@@ -43,13 +43,13 @@ Image_resize_layer::Image_resize_layer(int a_old_x_size, int a_old_y_size, int a
     new_y_size=a_new_y_size+2*frame_size;
     channels_count=a_channels_count;
 
-    activation=0;
+    activation_ptr=0;
     neurons_count=0;
     params_count=0;
     data_size=channels_count*old_x_size*old_y_size;
     out_size=channels_count*new_x_size*new_y_size;
 
-    next_layer=a_next_layer;
+    next_layer_ptr=a_next_layer;
 
     resize_coef_x=(float)(new_x_size-2*frame_size)/old_x_size;
     resize_coef_y=(float)(new_y_size-2*frame_size)/old_y_size;
@@ -63,16 +63,16 @@ Image_resize_layer::Image_resize_layer(int a_old_x_size, int a_old_y_size, int a
 }
 
 
-void Image_resize_layer::init(int a_layer_index, OCLW *a_oclw)
+void Image_resize_layer::init(int a_layer_index, OCLW *a_oclw_ptr)
 {
     layer_index=a_layer_index;
-    oclw=a_oclw;
+    oclw_ptr=a_oclw_ptr;
 
 
 
     generate_weights(weights_dispersion,weights_center);
 
-    if(oclw->is_inited())
+    if(oclw_ptr->is_inited())
     {
         km.set_default_path("kernels/layers/Image_resize_layer/");
 
@@ -93,8 +93,8 @@ void Image_resize_layer::init(int a_layer_index, OCLW *a_oclw)
         next_gradients_key="l_"+std::to_string(layer_index)+"_next_gradients";
 
 
-        oclw->add_variable(layer_res_key,CL_READ_WRITE_CACHE,out_size*sizeof(float));
-        oclw->add_variable(next_gradients_key,CL_READ_WRITE_CACHE,out_size*sizeof(float));
+        oclw_ptr->add_variable(layer_res_key,CL_READ_WRITE_CACHE,out_size*sizeof(float));
+        oclw_ptr->add_variable(next_gradients_key,CL_READ_WRITE_CACHE,out_size*sizeof(float));
 
     }
     else
@@ -123,8 +123,8 @@ std::vector<float> Image_resize_layer::predict(std::vector<float> &input)
 
 std::string Image_resize_layer::predict_oclw(const std::string &input_key)
 {
-    oclw->process_oclw(km.get("fill_floats"), {layer_res_key}, {0}, {out_size},out_size);
-    oclw->process_oclw(km.get("resize"), {input_key, layer_res_key}, {resize_coef_x,resize_coef_y, data_normalization_coef},
+    oclw_ptr->process_oclw(km.get("fill_floats"), {layer_res_key}, {0}, {out_size},out_size);
+    oclw_ptr->process_oclw(km.get("resize"), {input_key, layer_res_key}, {resize_coef_x,resize_coef_y, data_normalization_coef},
     {new_x_size,new_y_size, frame_size,  channels_count, old_y_size, old_x_size},channels_count, old_y_size, old_x_size);
 
 
@@ -136,7 +136,7 @@ void Image_resize_layer::calculate_previous_ng(std::vector<float> &previous_grad
     std::fill(previous_gradients.begin(),previous_gradients.end(),0);
 
     if(layer_index>0)
-        next_layer->calculate_previous_ng(next_gradients);
+        next_layer_ptr->calculate_previous_ng(next_gradients);
 
     resize_image(next_gradients,previous_gradients, inversed_resize_coef_x, inversed_resize_coef_y, inversed_data_normalization_coef, old_x_size,old_y_size,0,new_x_size,new_y_size);
 
@@ -147,12 +147,12 @@ void Image_resize_layer::calculate_previous_ng(std::vector<float> &previous_grad
 
 void Image_resize_layer::calculate_previous_ng_oclw(const std::string &previous_gradients_key, size_t previous_gradients_size)
 {
-    oclw->process_oclw(km.get("fill_floats"), {previous_gradients_key}, {0}, {previous_gradients_size},previous_gradients_size);
+    oclw_ptr->process_oclw(km.get("fill_floats"), {previous_gradients_key}, {0}, {previous_gradients_size},previous_gradients_size);
 
     if(layer_index>0)
-        next_layer->calculate_previous_ng_oclw(next_gradients_key,out_size);
+        next_layer_ptr->calculate_previous_ng_oclw(next_gradients_key,out_size);
 
-    oclw->process_oclw(km.get("resize"), {next_gradients_key, previous_gradients_key}, {inversed_resize_coef_x, inversed_resize_coef_y, inversed_data_normalization_coef},
+    oclw_ptr->process_oclw(km.get("resize"), {next_gradients_key, previous_gradients_key}, {inversed_resize_coef_x, inversed_resize_coef_y, inversed_data_normalization_coef},
     {old_x_size,old_y_size, 0,  channels_count, new_y_size, new_x_size},channels_count, new_y_size, new_x_size);
 }
 
@@ -163,7 +163,7 @@ void Image_resize_layer::calculate_previous_ng_in_neurons(std::vector<neuron> &p
     for(int i=0; i<previous_neurons.size(); i++)previous_neurons[i].gradient=0;
 
     if(layer_index>0)
-        next_layer->calculate_previous_ng(next_gradients);
+        next_layer_ptr->calculate_previous_ng(next_gradients);
 
 
 
@@ -196,12 +196,12 @@ void Image_resize_layer::calculate_previous_ng_in_neurons(std::vector<neuron> &p
 }
 void Image_resize_layer::calculate_previous_ng_in_neurons_oclw(const std::string &previous_neurons_key, size_t previous_neurons_size)
 {
-    oclw->process_oclw(km.get("fill_ng"), {previous_neurons_key}, {0}, {previous_neurons_size},previous_neurons_size);
+    oclw_ptr->process_oclw(km.get("fill_ng"), {previous_neurons_key}, {0}, {previous_neurons_size},previous_neurons_size);
 
     if(layer_index>0)
-        next_layer->calculate_previous_ng_oclw(next_gradients_key,out_size);
+        next_layer_ptr->calculate_previous_ng_oclw(next_gradients_key,out_size);
 
-    oclw->process_oclw(km.get("resize_in_neurons"), {next_gradients_key, previous_neurons_key}, {inversed_resize_coef_x, inversed_resize_coef_y, inversed_data_normalization_coef},
+    oclw_ptr->process_oclw(km.get("resize_in_neurons"), {next_gradients_key, previous_neurons_key}, {inversed_resize_coef_x, inversed_resize_coef_y, inversed_data_normalization_coef},
     {old_x_size,old_y_size, 0,  channels_count, new_y_size, new_x_size},channels_count, new_y_size, new_x_size);
 }
 
@@ -220,5 +220,5 @@ void Image_resize_layer::calculate_ng_main_lay(Loss *loss, const float *input, c
 
 void Image_resize_layer::calculate_ng_main_lay_oclw(const std::string &input_key, const std::string &output_key)
 {
-    oclw->process_oclw(km.get("calculate_ng_main_lay"), {output_key,layer_res_key, next_gradients_key}, {}, {out_size},out_size);
+    oclw_ptr->process_oclw(km.get("calculate_ng_main_lay"), {output_key,layer_res_key, next_gradients_key}, {}, {out_size},out_size);
 }

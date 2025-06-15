@@ -4,11 +4,11 @@
 
 Dense_layer::Dense_layer(Activation *a_activation, int a_data_size, int a_neurons_count, float a_weights_dispersion,float a_weights_center, Layer *a_next_layer)
 {
-    next_layer=a_next_layer;
+    next_layer_ptr=a_next_layer;
 
     data_size=a_data_size;
     neurons_count=a_neurons_count;
-    activation=a_activation;
+    activation_ptr=a_activation;
 
     params_count=data_size*neurons_count;
 
@@ -18,11 +18,11 @@ Dense_layer::Dense_layer(Activation *a_activation, int a_data_size, int a_neuron
 }
 
 
-void Dense_layer::init(int a_layer_index, OCLW *a_oclw)
+void Dense_layer::init(int a_layer_index, OCLW *a_oclw_ptr)
 {
     layer_index=a_layer_index;
-    oclw=a_oclw;
-    activation->set_oclw(oclw);
+    oclw_ptr=a_oclw_ptr;
+    activation_ptr->set_oclw(oclw_ptr);
 
 
     neurons.resize(neurons_count);
@@ -31,7 +31,7 @@ void Dense_layer::init(int a_layer_index, OCLW *a_oclw)
 
     generate_weights(weights_dispersion,weights_center);
 
-    if(oclw->is_inited())
+    if(oclw_ptr->is_inited())
     {
         km.set_default_path("kernels/layers/Dense_layer/");
 
@@ -47,11 +47,11 @@ void Dense_layer::init(int a_layer_index, OCLW *a_oclw)
         neurons_key="l_"+std::to_string(layer_index)+"_neurons";
         layer_res_key="l_"+std::to_string(layer_index)+"_layer_res";
 
-        oclw->add_and_write_variable(weights_key,CL_READ_WRITE_CACHE,weights.size()*sizeof(nn_type),weights.data());
-        oclw->add_variable(gradients_key,CL_READ_WRITE_CACHE,params_count*sizeof(nn_type));
+        oclw_ptr->add_and_write_variable(weights_key,CL_READ_WRITE_CACHE,weights.size()*sizeof(nn_type),weights.data());
+        oclw_ptr->add_variable(gradients_key,CL_READ_WRITE_CACHE,params_count*sizeof(nn_type));
 
-        oclw->add_and_write_variable(neurons_key,CL_READ_WRITE_CACHE,neurons.size()*sizeof(neuron),neurons.data());
-        oclw->add_variable(layer_res_key,CL_READ_WRITE_CACHE,neurons_count*sizeof(float));
+        oclw_ptr->add_and_write_variable(neurons_key,CL_READ_WRITE_CACHE,neurons.size()*sizeof(neuron),neurons.data());
+        oclw_ptr->add_variable(layer_res_key,CL_READ_WRITE_CACHE,neurons_count*sizeof(float));
 
         weights.clear();
         neurons.clear();
@@ -82,17 +82,17 @@ std::vector<float> Dense_layer::predict(std::vector<float> &input)
 
 
 
-    activation->activate(layer_res.data(),neurons_count);
+    activation_ptr->activate(layer_res.data(),neurons_count);
 
     return layer_res;
 }
 
 std::string Dense_layer::predict_oclw(const std::string &input_key)
 {
-    oclw->process_oclw(km.get("predict"), {neurons_key,input_key,layer_res_key,weights_key}, {}, {data_size,neurons_count},neurons_count);
+    oclw_ptr->process_oclw(km.get("predict"), {neurons_key,input_key,layer_res_key,weights_key}, {}, {data_size,neurons_count},neurons_count);
 
 
-    activation->activate_oclw(layer_res_key,neurons_count);
+    activation_ptr->activate_oclw(layer_res_key,neurons_count);
     return layer_res_key;
 }
 
@@ -111,7 +111,7 @@ void Dense_layer::calculate_gradients_with_ng(const float *input)
 
 void Dense_layer::calculate_gradients_with_ng_oclw(const std::string &input_key)
 {
-    oclw->process_oclw(km.get("calculate_gradients_with_ng"), {neurons_key,input_key,gradients_key}, {}, {neurons_count, data_size},neurons_count,data_size);
+    oclw_ptr->process_oclw(km.get("calculate_gradients_with_ng"), {neurons_key,input_key,gradients_key}, {}, {neurons_count, data_size},neurons_count,data_size);
 }
 
 
@@ -123,16 +123,16 @@ void Dense_layer::calculate_ng_main_lay(Loss *loss, const float *input, const fl
         loss->add_loss_gradient(output[i],layer_res[i], &neurons[i]);
     }
 
-    activation->multiply_neuron_gradient_by_activation_derivative(neurons.data(), layer_res.data(),neurons_count);
+    activation_ptr->multiply_neuron_gradient_by_activation_derivative(neurons.data(), layer_res.data(),neurons_count);
 
     calculate_gradients_with_ng(input);
 }
 
 void Dense_layer::calculate_ng_main_lay_oclw(const std::string &input_key, const std::string &output_key)
 {
-    oclw->process_oclw(km.get("calculate_ng_main_lay"), {neurons_key,output_key,layer_res_key}, {}, {neurons_count},neurons_count);
+    oclw_ptr->process_oclw(km.get("calculate_ng_main_lay"), {neurons_key,output_key,layer_res_key}, {}, {neurons_count},neurons_count);
 
-    activation->multiply_neuron_gradient_by_activation_derivative_oclw(neurons_key,layer_res_key,neurons_count);
+    activation_ptr->multiply_neuron_gradient_by_activation_derivative_oclw(neurons_key,layer_res_key,neurons_count);
 
     calculate_gradients_with_ng_oclw(input_key);
 }
@@ -153,7 +153,7 @@ void Dense_layer::calculate_previous_ng_in_neurons(std::vector<neuron> &previous
 }
 void Dense_layer::calculate_previous_ng_in_neurons_oclw(const std::string &previous_neurons_key, size_t previous_neurons_size)
 {
-    oclw->process_oclw(km.get("calculate_previous_ng_in_neurons"), {previous_neurons_key, neurons_key,weights_key}, {}, {neurons_count, previous_neurons_size},previous_neurons_size);
+    oclw_ptr->process_oclw(km.get("calculate_previous_ng_in_neurons"), {previous_neurons_key, neurons_key,weights_key}, {}, {neurons_count, previous_neurons_size},previous_neurons_size);
 }
 void Dense_layer::calculate_previous_ng(std::vector<float> &previous_gradients)
 {
@@ -170,16 +170,16 @@ void Dense_layer::calculate_previous_ng(std::vector<float> &previous_gradients)
 }
 void Dense_layer::calculate_previous_ng_oclw(const std::string &previous_gradients_key, size_t previous_gradients_size)
 {
-    oclw->process_oclw(km.get("calculate_previous_ng"), {neurons_key,weights_key,previous_gradients_key}, {}, {neurons_count, previous_gradients_size},previous_gradients_size);
+    oclw_ptr->process_oclw(km.get("calculate_previous_ng"), {neurons_key,weights_key,previous_gradients_key}, {}, {neurons_count, previous_gradients_size},previous_gradients_size);
 }
 
 void Dense_layer::calculate_ng(const float *input)
 {
 
-    next_layer->calculate_previous_ng_in_neurons(neurons);
+    next_layer_ptr->calculate_previous_ng_in_neurons(neurons);
 
 
-    activation->multiply_neuron_gradient_by_activation_derivative(neurons.data(), layer_res.data(),neurons_count);
+    activation_ptr->multiply_neuron_gradient_by_activation_derivative(neurons.data(), layer_res.data(),neurons_count);
 
 
     calculate_gradients_with_ng(input);
@@ -188,9 +188,9 @@ void Dense_layer::calculate_ng(const float *input)
 void Dense_layer::calculate_ng_oclw(const std::string &input_key)
 {
 
-    next_layer->calculate_previous_ng_in_neurons_oclw(neurons_key,neurons_count);
+    next_layer_ptr->calculate_previous_ng_in_neurons_oclw(neurons_key,neurons_count);
 
-    activation->multiply_neuron_gradient_by_activation_derivative_oclw(neurons_key,layer_res_key,neurons_count);
+    activation_ptr->multiply_neuron_gradient_by_activation_derivative_oclw(neurons_key,layer_res_key,neurons_count);
 
 
     calculate_gradients_with_ng_oclw(input_key);

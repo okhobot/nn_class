@@ -14,7 +14,7 @@ protected:
     float lr_reduction_coef, min_lr, max_lr;
     nn_type *weights_ptr,*gradients_ptr;
 
-    OCLW *oclw=0;
+    OCLW *oclw_ptr=0;
     neuron *neurons_ptr;
 
 public:
@@ -34,9 +34,9 @@ public:
 
 
     //setters
-    virtual void set_oclw(OCLW *a_oclw)
+    virtual void set_oclw(OCLW *a_oclw_ptr)
     {
-        oclw=a_oclw;
+        oclw_ptr=a_oclw_ptr;
     }
 
     //getters
