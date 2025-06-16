@@ -106,8 +106,8 @@ void Image_resize_layer::init(int a_layer_index, OCLW *a_oclw_ptr)
     }
     else
     {
-        layer_res.resize(out_size);
-        next_gradients.resize(out_size);
+        layer_res.resize(out_size,0);
+        next_gradients.resize(out_size,0);
 
         if(layer_index==0)neurons.resize(1);
     }

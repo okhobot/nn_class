@@ -91,9 +91,9 @@ void Convolutional_layer::init(int a_layer_index, OCLW *a_oclw_ptr)
     }
     else
     {
-        layer_res.resize(out_size);
-        converted_ng.resize(out_size);
-        converted_layer_res.resize(neurons_count);
+        layer_res.resize(out_size,0);
+        converted_ng.resize(out_size,0);
+        converted_layer_res.resize(neurons_count,0);
         gradients.resize(params_count,0);
     }
 
