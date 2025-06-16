@@ -97,7 +97,7 @@ void Layer::init(int a_layer_index, OCLW *a_oclw_ptr)
     }
     else
     {
-        layer_res.resize(neurons_count);
+        layer_res.resize(neurons_count,0);
         gradients.resize(params_count,0);
     }
 };
