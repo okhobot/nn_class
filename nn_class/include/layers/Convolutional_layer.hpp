@@ -50,12 +50,12 @@ public:
     void calculate_previous_ng_oclw(const std::string &previous_gradients_key, size_t previous_gradients_size)override;
 
 
-    nn_size_type get_input_size() override
+    inline nn_size_type get_input_size() override
     {
         return input_size;
     }
 
-    nn_size_type get_layer_res_size() override
+    inline nn_size_type get_layer_res_size() override
     {
         return out_size;
     }

@@ -37,13 +37,13 @@ public:
         }
     }
 
-    void activate_oclw(std::string layer_res_key, nn_size_type neuron_count)override
+    inline void activate_oclw(std::string layer_res_key, nn_size_type neuron_count)override
     {
         oclw_ptr->process_oclw(km.get("activate"), {layer_res_key}, {coef}, {neuron_count},neuron_count);
     }
 
 
-    void multiply_neuron_gradient_by_activation_derivative_oclw(std::string neurons_key,std::string layer_res_key, nn_size_type neuron_count)override
+    inline void multiply_neuron_gradient_by_activation_derivative_oclw(std::string neurons_key,std::string layer_res_key, nn_size_type neuron_count)override
     {
         oclw_ptr->process_oclw(km.get("multiply_ng_by_activation_derivative"), {neurons_key,layer_res_key}, {coef}, {neuron_count},neuron_count);
     }

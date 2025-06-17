@@ -43,7 +43,7 @@ public:
 
     void save(std::ofstream &output)override {};
 
-    nn_size_type get_layer_res_size() override
+    inline nn_size_type get_layer_res_size() override
     {
         return out_size;
     }

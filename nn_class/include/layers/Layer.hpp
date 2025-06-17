@@ -155,6 +155,10 @@ public:
     {
         return params_count+neurons_count;
     }
+    inline bool is_inited()
+    {
+        return inited;
+    }
 
     ///setters
     virtual void set_next_layer(Layer *a_next_layer, bool forced=false)
@@ -164,9 +168,4 @@ public:
     }
 
     virtual void set_layer_res(const std::vector<float> &res);
-
-    virtual bool is_inited()
-    {
-        return inited;
-    }
 };
