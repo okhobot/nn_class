@@ -151,7 +151,7 @@ public:
         return layer_index;
     }
 
-    virtual size_t get_layer_data_size()
+    virtual size_t get_layer_save_load_size()
     {
         return params_count+neurons_count;
     }

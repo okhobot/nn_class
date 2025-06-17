@@ -91,7 +91,7 @@ void NN::save(std::string file_name)
         (*logs_output)<<"saving..."<<std::endl;
 
     for(int i=0; i<layers.size(); i++)
-        layers_data_size+=layers[i]->get_layer_data_size();
+        layers_data_size+=layers[i]->get_layer_save_load_size();
 
 
     std::ofstream f(file_name, std::ios::out |std::ios::binary);//std::ios::binary
@@ -131,7 +131,7 @@ void NN::load(std::string file_name)
     }
 
     for(int i=0; i<layers.size(); i++)
-        layers_data_size+=layers[i]->get_layer_data_size();
+        layers_data_size+=layers[i]->get_layer_save_load_size();
     f.read(reinterpret_cast<char*>(&file_layers_data_size),sizeof(size_t));
 
     if(layers_data_size!=file_layers_data_size)
