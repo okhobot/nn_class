@@ -180,3 +180,14 @@ void Layer::set_layer_res(const std::vector<float> &res)
         layer_res.clear();
     }
 }
+
+
+void Layer::print_layer_info(std::ostream *logs_output)
+{
+    (*logs_output)<<"layer index: "<<layer_index<<
+      "; type: "<<typeid(*this).name()<<
+      "; params count: "<<get_params_count()<<
+      "; input size: "<<get_input_size()<<
+      "; output size: "<<get_layer_res_size()<<
+      std::endl;
+}

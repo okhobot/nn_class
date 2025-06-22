@@ -16,14 +16,8 @@ void NN::show()
     nn_size_type params_count=0;
     for(int i=layers.size()-1; i>=0; i--)
     {
-        (*logs_output)<<"layer index: "<<layers[i]->get_layer_index()<<
-                      "; type: "<<typeid(*layers[i]).name()<<
-                      "; params count: "<<layers[i]->get_params_count()<<
-                      "; input size: "<<layers[i]->get_input_size()<<
-                      "; output size: "<<layers[i]->get_layer_res_size()<<
-                      std::endl;
-
-        params_count+=layers[i]->get_params_count();
+        layers[i]->print_layer_info(logs_output);
+        params_count+=layers[i]->get_params_count()+layers[i]->get_neurons_count();
     }
     (*logs_output)<<"model total params count: "<<params_count<<std::endl;
 

@@ -79,6 +79,9 @@ public:
 
     virtual void generate_kernels(Loss *loss);// if need to generate some kernels
 
+
+    virtual void print_layer_info(std::ostream *logs_output);
+
     /// getters
 
     virtual std::vector<std::string> get_kernels_paths();
