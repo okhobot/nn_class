@@ -94,8 +94,6 @@
 		<Unit filename="kernels/layers/Image_resize_layer/imres_lay_calculate_ng_with_loss_func_kernel_tmp.cl" />
 		<Unit filename="kernels/layers/Image_resize_layer/imres_lay_resize_in_neurons_kernel.cl" />
 		<Unit filename="kernels/layers/Image_resize_layer/imres_lay_resize_kernel.cl" />
-		<Unit filename="kernels/optimizers/Optimizer/optimizer_update_b_params_kernel.cl" />
-		<Unit filename="kernels/optimizers/Optimizer/optimizer_update_w_params_kernel.cl" />
 		<Unit filename="kernels/optimizers/SGD_optimizer/sgd_optimizer_update_b_params_kernel.cl" />
 		<Unit filename="kernels/optimizers/SGD_optimizer/sgd_optimizer_update_w_params_kernel.cl" />
 		<Unit filename="src/NN.cpp" />
@@ -106,7 +104,6 @@
 		<Unit filename="src/layers/Image_resize_layer.cpp" />
 		<Unit filename="src/layers/Layer.cpp" />
 		<Unit filename="src/losses/Loss.cpp" />
-		<Unit filename="src/optimizers/Optimizer.cpp" />
 		<Unit filename="src/optimizers/SGD_optimizer.cpp" />
 		<Extensions>
 			<lib_finder disable_auto="1" />
