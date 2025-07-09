@@ -14,7 +14,7 @@ file(
 
 
 add_library(${PROJECT_NAME} STATIC ${SOURCES})
-target_compile_definitions(${PROJECT_NAME} PRIVATE NNC_EXPORTS=1)
+target_compile_definitions(${PROJECT_NAME} PRIVATE NN_CLASS_EXPORTS=1)
 
 target_link_libraries(${PROJECT_NAME} OCLW)
 target_include_directories(${PROJECT_NAME} PRIVATE include)
