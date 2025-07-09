@@ -23,15 +23,15 @@ void SGD_optimizer::update_params(Layer *layer, const nn_size_type &data_index)
 
     for(int i=0; i<layer->get_params_count(); i++)
     {
-        add(&gradients_ptr[i], -regularization_coef*weights_ptr[i]*batch_size);
-        add(&weights_ptr[i],learning_rate*gradients_ptr[i]);
+        add(&gradients_ptr[i], -regularization_coef*weights_ptr[i]);
+        add(&weights_ptr[i],learning_rate*gradients_ptr[i]/batch_size);
         gradients_ptr[i]=0;
     }
 
     for(int i=0; i<layer->get_neurons_count(); i++)
     {
-        neurons_ptr[i].b_grad-= regularization_coef*neurons_ptr[i].b*batch_size;
-        add(&neurons_ptr[i].b,learning_rate*neurons_ptr[i].b_grad);
+        neurons_ptr[i].b_grad-= regularization_coef*neurons_ptr[i].b;
+        add(&neurons_ptr[i].b,learning_rate*neurons_ptr[i].b_grad/batch_size);
         neurons_ptr[i].b_grad=0;
     }
 
