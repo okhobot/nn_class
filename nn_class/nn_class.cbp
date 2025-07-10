@@ -62,6 +62,9 @@
 		<Unit filename="include/losses/LogLoss.hpp" />
 		<Unit filename="include/losses/Loss.hpp" />
 		<Unit filename="include/losses/MAE.hpp" />
+		<Unit filename="include/metrics/Metrics.hpp" />
+		<Unit filename="include/metrics/Multiclass_accuracy.hpp" />
+		<Unit filename="include/metrics/Multilabel_accuracy.hpp" />
 		<Unit filename="include/neuron.h" />
 		<Unit filename="include/optimizers/Optimizer.hpp" />
 		<Unit filename="include/optimizers/SGD_optimizer.hpp" />
