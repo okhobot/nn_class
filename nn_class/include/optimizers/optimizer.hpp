@@ -18,11 +18,11 @@ protected:
     neuron *neurons_ptr;
 
 public:
-    Optimizer(){};
+    Optimizer() {};
 
-    virtual void update_params(Layer *layer, const nn_size_type &data_index){};
+    virtual void update_params(Layer *layer, const nn_size_type &data_index) {};
 
-    virtual void update_params_oclw(Layer *layer, const nn_size_type &data_index){};
+    virtual void update_params_oclw(Layer *layer, const nn_size_type &data_index) {};
 
     virtual void reduce_lr()
     {
