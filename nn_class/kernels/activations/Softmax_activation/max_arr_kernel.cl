@@ -6,10 +6,10 @@ __kernel void max_arr_kernel(
 {
     long i = get_global_id(0);
 
-    float group_sum = work_group_reduce_max(arr[i]);
+    float group_max = work_group_reduce_max(arr[i]);
 
-    if (i == target_index) {
-        res[i] = group_sum;
+    if (i == 0) {
+        res[target_index] = group_max;
         //printf("max: %f \n",res[i]);
     }
 

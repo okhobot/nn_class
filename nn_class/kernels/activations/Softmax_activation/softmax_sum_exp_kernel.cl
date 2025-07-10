@@ -10,8 +10,8 @@ __kernel void softmax_sum_exp_kernel(
     arr[i]=exp(arr[i] - res[max_val_index]);
     float group_sum = work_group_reduce_add(arr[i]);
 
-    if (i == target_res_index) {
-        res[i] = group_sum;
+    if (i == 0) {
+        res[target_res_index] = group_sum;
         //printf("sum: %f \n",res[i]);
     }
 

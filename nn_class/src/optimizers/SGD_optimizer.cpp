@@ -1,7 +1,6 @@
 #include <optimizers/SGD_optimizer.hpp>
 
-SGD_optimizer::SGD_optimizer(int a_batch_size, float a_learning_rate, float a_lr_reduction_coef, float a_regularization_coef, float a_min_lr, float a_max_lr) :
-    Optimizer(a_learning_rate,a_lr_reduction_coef,a_regularization_coef,a_min_lr,a_max_lr)
+SGD_optimizer::SGD_optimizer(int a_batch_size, float a_learning_rate, float a_lr_reduction_coef, float a_regularization_coef, float a_min_lr, float a_max_lr)
 {
 
     km.set_default_path("kernels/optimizers/SGD_optimizer/");
@@ -9,6 +8,16 @@ SGD_optimizer::SGD_optimizer(int a_batch_size, float a_learning_rate, float a_lr
     km.add_kernel("update_w_params","sgd_optimizer_update_w_params_kernel");
 
     batch_size=a_batch_size;
+
+    learning_rate=a_learning_rate;
+
+    regularization_coef=a_regularization_coef;
+
+    if(a_lr_reduction_coef==0)
+        debug_utils::call_warning("Optimizer init","invalid value","lr_reduction_coef cannot be 0, to ensure that the learning_rate does not decrease, set the value of lr_reduction_coefficient to 1");
+    lr_reduction_coef=a_lr_reduction_coef;
+    min_lr=a_min_lr;
+    max_lr=a_max_lr;
 }
 
 
