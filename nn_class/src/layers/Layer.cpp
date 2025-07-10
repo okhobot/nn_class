@@ -92,8 +92,8 @@ void Layer::init(int a_layer_index, OCLW *a_oclw_ptr)
 
         init_oclw_variables();
 
-        weights.clear();
-        neurons.clear();
+        weights=std::vector<nn_type>();
+        neurons=std::vector<neuron>();
     }
     else
     {
@@ -128,8 +128,9 @@ void Layer::load(std::ifstream &input)
     {
         oclw_ptr->write_variable(neurons_key, neurons.size()*sizeof(neuron),neurons.data());
         oclw_ptr->write_variable(weights_key, weights.size()*sizeof(nn_type),weights.data());
-        neurons.clear();
-        weights.clear();
+
+        neurons=std::vector<neuron>();
+        weights=std::vector<nn_type>();
     }
 }
 
@@ -177,7 +178,7 @@ void Layer::set_layer_res(const std::vector<float> &res)
     if(oclw_ptr->is_inited())
     {
         oclw_ptr->write_variable(layer_res_key,layer_res.size()*sizeof(float),layer_res.data());
-        layer_res.clear();
+        layer_res=std::vector<float>();
     }
 }
 
@@ -185,9 +186,9 @@ void Layer::set_layer_res(const std::vector<float> &res)
 void Layer::print_layer_info(std::ostream *logs_output)
 {
     (*logs_output)<<"layer index: "<<layer_index<<
-      "; type: "<<typeid(*this).name()<<
-      "; params count: "<<get_params_count()<<
-      "; input size: "<<get_input_size()<<
-      "; output size: "<<get_layer_res_size()<<
-      std::endl;
+                  "; type: "<<typeid(*this).name()<<
+                  "; params count: "<<get_params_count()<<
+                  "; input size: "<<get_input_size()<<
+                  "; output size: "<<get_layer_res_size()<<
+                  std::endl;
 }

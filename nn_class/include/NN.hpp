@@ -4,6 +4,7 @@
 #include <oclw.hpp>
 #include <optimizers/Optimizer.hpp>
 #include <losses/Loss.hpp>
+#include <metrics/Metrics.hpp>
 
 #include <vector>
 #include <algorithm>
@@ -25,8 +26,9 @@ protected:
                       nn_output_key="nn_output";
 
     OCLW oclw;
-    Optimizer *optimizer;
-    Loss *loss;
+    Optimizer *optimizer_ptr;
+    Loss *loss_ptr;
+    Metrics *metric_ptr;
 
     std::ostream *logs_output=0;
 
@@ -47,7 +49,7 @@ protected:
     void train_oclw(std::vector<size_t> &indexes,size_t &i);
 
 public:
-    NN(Optimizer *a_optimizer, Loss *a_loss);
+    NN(Optimizer *a_optimizer_ptr, Loss *a_loss_ptr, Metrics *a_metric_ptr=0);
 
     virtual void show();// print model data to logs_out
 

@@ -18,14 +18,11 @@ protected:
     neuron *neurons_ptr;
 
 public:
-    Optimizer(float a_learning_rate=0.1, float a_lr_reduction_coef=1, float a_regularization_coef=0, float a_min_lr=1e-7,float a_max_lr=5e-1) ;
-    // lr_reduction_coef - coefficient of change of learning_rate
-    // a_min_lr - fuzzy minimal learning_rate
-    // a_max_lr - fuzzy minimum learning_rate
+    Optimizer() {};
 
-    virtual void update_params(Layer *layer, const nn_size_type &data_index);
+    virtual void update_params(Layer *layer, const nn_size_type &data_index) {};
 
-    virtual void update_params_oclw(Layer *layer, const nn_size_type &data_index);
+    virtual void update_params_oclw(Layer *layer, const nn_size_type &data_index) {};
 
     virtual void reduce_lr()
     {
