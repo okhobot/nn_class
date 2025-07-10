@@ -86,8 +86,8 @@ void Convolutional_layer::init(int a_layer_index, OCLW *a_oclw_ptr)
 
 
 
-        weights.clear();
-        neurons.clear();
+        weights=std::vector<nn_type>();
+        neurons=std::vector<neuron>();
     }
     else
     {

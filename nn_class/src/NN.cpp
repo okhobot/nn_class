@@ -3,10 +3,11 @@
 
 
 
-NN::NN(Optimizer *a_optimizer, Loss *a_loss)
+NN::NN(Optimizer *a_optimizer_ptr, Loss *a_loss_ptr, Metrics *a_metric_ptr)
 {
-    optimizer=a_optimizer;
-    loss=a_loss;
+    optimizer_ptr=a_optimizer_ptr;
+    loss_ptr=a_loss_ptr;
+    metric_ptr=a_metric_ptr;
 }
 
 
@@ -30,9 +31,9 @@ void NN::init(int device_index, unsigned seed)
     std::vector<std::string> kernels, tmp;
 
     if(device_index>-1) oclw.init(device_index);
-    optimizer->set_oclw(&oclw);
+    optimizer_ptr->set_oclw(&oclw);
 
-    tmp=optimizer->get_kernels_paths();
+    tmp=optimizer_ptr->get_kernels_paths();
     kernels.insert(kernels.end(),tmp.begin(), tmp.end());
 
     srand(seed);
@@ -47,7 +48,7 @@ void NN::init(int device_index, unsigned seed)
             oclw.add_variable(nn_output_key,CL_READ_ONLY_CACHE,layers[0]->get_layer_res_size()*sizeof(float));
             oclw.add_variable(oclw_null,CL_READ_WRITE_CACHE,0);
 
-            layers[i]->generate_kernels(loss);
+            layers[i]->generate_kernels(loss_ptr);
             tmp=layers[i]->get_kernels_paths();
             kernels.insert(kernels.end(),tmp.begin(), tmp.end());
 
@@ -178,7 +179,7 @@ void NN::train_oclw(std::vector<size_t> &indexes, size_t &i)
 
 
     for(int l_i=0; l_i<layers.size(); l_i++)
-        optimizer->update_params_oclw(layers[l_i],i);
+        optimizer_ptr->update_params_oclw(layers[l_i],i);
 
 
 }
@@ -210,18 +211,18 @@ void NN::correct_weights(const std::vector<float> &input, const std::vector<floa
 
 
         for(int l_i=0; l_i<layers.size(); l_i++)
-            optimizer->update_params_oclw(layers[l_i],-1);
+            optimizer_ptr->update_params_oclw(layers[l_i],-1);
 
         return;
     }
 
-    layers[0]->calculate_ng_main_lay(loss, layers.size()==1? input.data():layers[1]->get_layer_res_ptr(),  output.data());
+    layers[0]->calculate_ng_main_lay(loss_ptr, layers.size()==1? input.data():layers[1]->get_layer_res_ptr(),  output.data());
 
     for(int l_i=1; l_i<layers.size(); l_i++)
         layers[l_i]->calculate_ng((l_i==layers.size()-1? input.data():layers[l_i+1]->get_layer_res_ptr()));
 
     for(int l_i=0; l_i<layers.size(); l_i++)
-        optimizer->update_params(layers[l_i],-1);
+        optimizer_ptr->update_params(layers[l_i],-1);
 }
 
 
@@ -313,7 +314,9 @@ void NN::train(std::vector<std::vector<float>> input, std::vector<std::vector<fl
         {
             oclw.add_and_write_variable(nn_test_input_key+std::to_string(i),CL_READ_ONLY_CACHE, test_input[i].size()*sizeof(float),test_input[i].data());
         }
-
+        input=std::vector<std::vector<float>>();
+        output=std::vector<std::vector<float>>();
+        test_input=std::vector<std::vector<float>>();
 
     }
 
@@ -337,14 +340,14 @@ void NN::train(std::vector<std::vector<float>> input, std::vector<std::vector<fl
             predict(input[indexes[i]]);
 
 
-            layers[0]->calculate_ng_main_lay(loss, layers.size()==1?input[indexes[i]].data():layers[1]->get_layer_res_ptr(), output[indexes[i]].data());
+            layers[0]->calculate_ng_main_lay(loss_ptr, layers.size()==1?input[indexes[i]].data():layers[1]->get_layer_res_ptr(), output[indexes[i]].data());
 
             for(int l_i=1; l_i<layers.size(); l_i++)
                 layers[l_i]->calculate_ng((l_i==layers.size()-1? input[indexes[i]].data():layers[l_i+1]->get_layer_res_ptr()));
 
 
             for(int l_i=0; l_i<layers.size(); l_i++)
-                optimizer->update_params(layers[l_i],i);
+                optimizer_ptr->update_params(layers[l_i],i);
         }
 
 
@@ -354,6 +357,9 @@ void NN::train(std::vector<std::vector<float>> input, std::vector<std::vector<fl
         {
             sum_error=0;
             max_error=0;
+
+            if(metric_ptr)metric_ptr->reset();
+
             for(int i=0; i<test_input.size(); i++)
             {
                 if(oclw.is_inited())
@@ -365,22 +371,25 @@ void NN::train(std::vector<std::vector<float>> input, std::vector<std::vector<fl
                     predict_res=predict(test_input[i]);
 
 
-                error=loss->calculate_error(test_output[i].data(),predict_res.data(),predict_res.size());
+                error=loss_ptr->calculate_error(test_output[i].data(),predict_res.data(),predict_res.size());
                 max_error=std::max(error, max_error);
                 sum_error+=error;
+
+                if(metric_ptr)metric_ptr->check(predict_res,test_output[i]);
             }
 
             auto t = std::time(nullptr);
             auto tm = *std::localtime(&t);
 
-            std::cout<<"epoch: "<<epoch<<"    ";
-            if(test_data_count!=0)std::cout<<"error: "<<sum_error/test_input.size()<<"    "<<"max_error: "<<max_error<<"     ";
-            std::cout<<"lr: "<<optimizer->get_learning_rate()<<"    ";
+            std::cout<<"epoch: "<<epoch<<";  ";
+            if(test_data_count!=0)std::cout<<"error: "<<sum_error/test_input.size()<<";  "<<"max_error: "<<max_error<<";  ";
+            if(test_data_count!=0 && metric_ptr)std::cout<<metric_ptr->get_name()<<": "<<metric_ptr->get_result()<<";  ";
+            std::cout<<"lr: "<<optimizer_ptr->get_learning_rate()<<";  ";
             std::cout<<"ms spent: "<<get_milliseconds_now()-ms
                      <<" ("<<std::put_time(&tm, "%d.%m.%Y; %H:%M:%S")<<")"<<std::endl;
         }
 
-        optimizer->reduce_lr();
+        optimizer_ptr->reduce_lr();
 
         if(autosave!=0 && epoch%autosave==0)save();
     }

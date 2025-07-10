@@ -13,6 +13,7 @@
 #include <activations/Sigmoid_activation.hpp>
 #include <activations/Softmax_activation.hpp>
 #include <losses/LogLoss.hpp>
+#include<metrics/Multiclass_accuracy.hpp>
 
 int convert_int (int i)
 {
@@ -118,6 +119,8 @@ int main()
     //creating nn params
     SGD_optimizer opt(16,0.0001,1.05,0,1e-7);
     LogLoss loss;
+    Multiclass_accuracy accuracy;
+
     LeakyReLU_activation l_relu;
     Softmax_activation softmax;
     Sigmoid_activation sigmoid;
@@ -129,7 +132,7 @@ int main()
     Dense_layer out_lay(&softmax,128,10,-2);// input size - 128, output - 10
 
 
-    NN nn(&opt,&loss);//create nn with nn params
+    NN nn(&opt,&loss, &accuracy);//create nn with nn params
     nn.add_layer(&out_lay);// adding layers
     nn.add_layer(&hide_lay);// from output to input
     nn.add_layer(&irl);
