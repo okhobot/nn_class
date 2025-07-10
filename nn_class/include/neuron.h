@@ -16,8 +16,8 @@ inline float min(float a, float b)
 #endif
 
 typedef float nn_type;
-#define nn_t_bounds 700 //700 for float; 700000 for int, 126 for char;
-#define nn_type_translate_coef 1.0 //1 for float, 1000 for int, 100 for char
+#define nn_t_bounds 700 //700 for float; 1e+9 for int, 126 for char;
+#define nn_type_translate_coef 1.0 //1 for float, 1e+7 for int, 100 for char
 
 #define oclw_null "-"
 
