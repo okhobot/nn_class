@@ -280,6 +280,7 @@ void NN::train(std::vector<std::vector<float>> input, std::vector<std::vector<fl
         {
             test_input=input;
             test_output=output;
+            test_data_count=input.size();
         }
         else if(test_data_count>0)
         {
@@ -360,7 +361,7 @@ void NN::train(std::vector<std::vector<float>> input, std::vector<std::vector<fl
 
             if(metric_ptr)metric_ptr->reset();
 
-            for(int i=0; i<test_input.size(); i++)
+            for(int i=0; i<test_data_count; i++)
             {
                 if(oclw.is_inited())
                 {
@@ -382,7 +383,7 @@ void NN::train(std::vector<std::vector<float>> input, std::vector<std::vector<fl
             auto tm = *std::localtime(&t);
 
             std::cout<<"epoch: "<<epoch<<";  ";
-            if(test_data_count!=0)std::cout<<"error: "<<sum_error/test_input.size()<<";  "<<"max_error: "<<max_error<<";  ";
+            if(test_data_count!=0)std::cout<<"error: "<<sum_error/test_data_count<<";  "<<"max_error: "<<max_error<<";  ";
             if(test_data_count!=0 && metric_ptr)std::cout<<metric_ptr->get_name()<<": "<<metric_ptr->get_result()<<";  ";
             std::cout<<"lr: "<<optimizer_ptr->get_learning_rate()<<";  ";
             std::cout<<"ms spent: "<<get_milliseconds_now()-ms
