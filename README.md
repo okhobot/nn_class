@@ -5,17 +5,26 @@ A modular neural network class with basic functionality
 ## Features
 - Uses opencl_wrapper [https://github.com/okhobot/opencl_wrapper]
 
-### contains
+### Contains
+
+#### Metrics
+ - Multiclass_accuracy
+ - Multilabel_accuracy
+
+#### Activations
  - Sigmoid_activation
  - ReLU_activation
  - LeakyReLU_activation
- 
+
+ #### Losses
  - MSE loss func
  - MAE loss func
  - LogLoss func
 
+#### Optimizers
  - SGD_optimizer
 
+#### Layers
  - Fully_connected_layer
  - Convolutional_layer
  - Image_resize_layer
