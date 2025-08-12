@@ -11,10 +11,14 @@ __kernel void dense_lay_predict_kernel(
     long i = get_global_id(0);
     if(i>=data_size)return;
 
-    layer_res[i]=tof(neurons[i].b);
-    for(long j=0;j<params_count;j++)
-        layer_res[i]+=tof(weights[neurons[i].params_start_index+j])*input[j];
+    long pstart_index=neurons[i].params_start_index;
+    float sum=tof(neurons[i].b);
 
-     //printf("ok \n");
+    for(long j=0;j<params_count;j++)
+        sum+=tof(weights[pstart_index+j])*input[j];
+
+    layer_res[i]=sum;
+
+    //printf("ok \n");
 
 }

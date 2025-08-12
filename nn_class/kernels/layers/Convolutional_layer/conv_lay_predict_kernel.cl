@@ -26,19 +26,21 @@ __kernel void conv_lay_predict_kernel(
     if(x+nx_size>x_size)return;
 
 
-    int res_index=neuron_index*lay_res_x_size*lay_res_y_size+y/y_step*lay_res_x_size+x/x_step;
-    layer_res[res_index]=0;
+    long res_index=neuron_index*lay_res_x_size*lay_res_y_size+y/y_step*lay_res_x_size+x/x_step;
+    long pstart_index=neurons[neuron_index].params_start_index;
+    float res=0;
 
     for(int channel=0;channel<channels_count;channel++)
         for(int j=0; j<ny_size;j++)
             for(int k=0; k<nx_size;k++)
             {
-                layer_res[res_index]+=tof(weights[neurons[neuron_index].params_start_index+ k+j*nx_size+channel*nx_size*ny_size])*
+                res+=tof(weights[pstart_index+ k+j*nx_size+channel*nx_size*ny_size])*
                     input[x+k+(y+j)*x_size+channel*x_size*y_size];
 
 
             }
 
+    layer_res[res_index]=res;
     //printf("ok \n");
 
 }

@@ -10,13 +10,15 @@ __kernel void dense_lay_calculate_previous_ng_in_neurons_kernel(
     long i = get_global_id(0);
     if(i>=data_size)return;
 
-    previous_neurons[i].gradient=0;
+    float res=0;
     for(int j=0;j<neurons_count;j++)
         {
-            previous_neurons[i].gradient+=
+            res+=
                 neurons[j].gradient*
                 tof(weights[neurons[j].params_start_index+i]);
         }
+
+    previous_neurons[i].gradient=res;
 
     //printf("ok \n");
 
