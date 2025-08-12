@@ -392,7 +392,7 @@ void NN::train(std::vector<std::vector<float>> input, std::vector<std::vector<fl
 
         optimizer_ptr->reduce_lr();
 
-        if(autosave!=0 && epoch%autosave==0)save();
+        if(autosave!=0 && (epoch+1)%autosave==0)save();
     }
 
 
